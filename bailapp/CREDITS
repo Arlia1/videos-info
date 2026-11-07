@@ -1,0 +1,11 @@
+# Credits & Licenses
+
+## Typography
+- **Limelight**: Designed by Nicole Fally. SIL Open Font License (OFL).
+- **Poiret One**: Designed by Denis Masharov. SIL Open Font License (OFL).
+- **Josefin Sans**: Designed by Santiago Orozco. SIL Open Font License (OFL).
+- **Italiana**: Designed by Santiago Orozco. SIL Open Font License (OFL).
+
+## Audio & Synthesis
+- Sound design, foley & synthetic instruments generated via Python WebAudio / wave synthesis.
+- TTS voice generated via edge-tts / Kokoro (es-ES / es-MX neural voice).

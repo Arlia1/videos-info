@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: linear-gradient(180deg, #FFF5F8 0%, #FDEBF2 35%, #FBD4E3 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bg-panel {
+    position: absolute;
+    top: 150px;
+    width: 950px;
+    height: 1420px;
+    border-radius: 475px 475px 40px 40px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7FA 55%, rgba(254, 237, 244, 0.45) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 35px 80px rgba(224, 99, 133, 0.12);
+    z-index: 1;
+  }
+
+  .studio-sunbeam {
+    position: absolute;
+    top: 190px;
+    right: 70px;
+    width: 400px;
+    height: 650px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 245, 248, 0) 70%);
+    border-radius: 30px;
+    transform: rotate(6deg);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .header-badge {
+    position: absolute;
+    top: 100px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFFFFF;
+    padding: 16px 38px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(224, 99, 133, 0.15);
+    border: 2px solid #FAD2E1;
+    z-index: 10;
+  }
+  .header-badge .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #E06385;
+    box-shadow: 0 0 14px #E06385;
+  }
+  .header-badge span {
+    font-size: 24px;
+    font-weight: 800;
+    color: #3D2D3B;
+    letter-spacing: 0.6px;
+  }
+
+  .cards-column {
+    position: absolute;
+    top: 250px;
+    left: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    z-index: 10;
+    width: 420px;
+  }
+
+  .floating-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 20px 26px;
+    box-shadow: 0 16px 36px rgba(216, 27, 96, 0.09);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 2px solid #FCE4EC;
+  }
+
+  .icon-bubble {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .icon-bubble.grey { background: #F5EBF0; color: #8C7A87; }
+  .icon-bubble.red { background: #FFEBEE; color: #E53935; }
+  .icon-bubble.pink { background: #FFE4EC; color: #E06385; }
+
+  .card-text .title {
+    font-size: 21px;
+    font-weight: 800;
+    color: #382E39;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .card-text .subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #9C8997;
+  }
+
+  .character-stage {
+    position: absolute;
+    bottom: 370px;
+    right: 50px;
+    width: 540px;
+    height: 1100px;
+    z-index: 6;
+  }
+
+  .subtitle-safezone {
+    position: absolute;
+    bottom: 240px;
+    width: 940px;
+    text-align: center;
+    z-index: 20;
+    padding: 24px 36px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 36px;
+    border: 2px solid #FAD2E1;
+    box-shadow: 0 22px 55px rgba(74, 62, 77, 0.08);
+  }
+
+  .subtitle-text {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: #2D242E;
+  }
+
+  .highlight-pink {
+    color: #C2185B;
+    background: #FCE4EC;
+    padding: 2px 14px;
+    border-radius: 14px;
+    display: inline-block;
+  }
+
+  .app-preview-bar {
+    position: absolute;
+    bottom: 80px;
+    width: 900px;
+    background: #2D242E;
+    color: #FFFFFF;
+    padding: 22px 38px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 20px 45px rgba(45, 36, 46, 0.22);
+  }
+  .app-preview-bar .logo-name {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-preview-bar .cta-pill {
+    background: #F8BBD0;
+    color: #880E4F;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 14px 32px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-panel"></div>
+  <div class="studio-sunbeam"></div>
+
+  <!-- Header Badge en español -->
+  <div class="header-badge">
+    <div class="dot"></div>
+    <span>CLASES DE BALLET Y CONTEMPO</span>
+  </div>
+
+  <!-- Tarjetas flotantes a la izquierda -->
+  <div class="cards-column">
+    <div class="floating-card">
+      <div class="icon-bubble pink">🩰</div>
+      <div class="card-text">
+        <div class="title">"¿Tienen Ballet Adultos Inicial?"</div>
+        <div class="subtitle">Visto hace 4 días · Sin respuesta</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble red">⚠️</div>
+      <div class="card-text">
+        <div class="title">"Solo formación infantil desde los 4 años"</div>
+        <div class="subtitle">Buscabas clases para arrancar ahora...</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble grey">📍</div>
+      <div class="card-text">
+        <div class="title">Horarios a las 10:00 AM en días hábiles</div>
+        <div class="subtitle">Imposible con tu trabajo/estudio 🙃</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAILARINA DE BALLET / DANZA CLÁSICA (LEOTARDO CLÁSICO + FALDA DE GASA + ZAPATILLAS DE PUNTA CON CINTAS) -->
+  <div class="character-stage">
+    <svg width="540" height="1100" viewBox="0 0 380 490" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="characterShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#C2185B" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+
+      <ellipse cx="190" cy="460" rx="140" ry="16" fill="#E8BCC8" fill-opacity="0.5"/>
+
+      <!-- Rig Humaaans: Ballet Dancer -->
+      <g id="a-standing-human" transform="translate(190, 240) scale(-1, 1) translate(-190, -240) translate(40, 20)" filter="url(#characterShadow)">
+
+        <!-- 1. BOTTOM: BALLET LEGS & TULLE WRAP SKIRT WITH POINTE RIBBONS -->
+        <g id="BOTTOM" transform="translate(0, 187)">
+          <!-- Legs (Slender ballet line in soft skin/tights) -->
+          <path id="Leg-Back" d="M180.27,117.82 C180.04,117.48 179.84,117.1 179.69,116.69 C176.48,108.21 125.12,16.73 120,0 L177.83,0 C181.72,12.72 199.23,92.52 201.69,108.44 C209.47,133.56 225.48,214.9 227.52,220.53 C229.67,226.46 217.57,232.63 214.35,225.35 C209.22,213.75 197,181.67 191.56,162.07 C186.46,143.71 182.3,127.18 180.27,117.82 Z" fill="#E0B69B"/>
+          <path id="Leg-Front" d="M132.96,128.99 C109.48,134.93 23.58,145.66 17.69,147.34 C11.63,149.07 6.31,136.57 13.8,133.87 C25.73,129.56 58.59,119.61 78.51,115.54 C94.54,112.28 109.16,109.61 118.98,108.05 C118.14,80.47 114.34,14.29 116.83,0 L168,0 C165.61,13.71 145.41,113.72 141.66,123.73 C140.46,127.3 136.91,128.88 132.96,128.99 Z" fill="#F2C8B0"/>
+
+          <!-- Soft Ballet Wrap Skirt (Semi-translucent soft blush pink tulle) -->
+          <path id="Skirt-Shadow" d="M97.41,98.09 C121.4,104.8 142.09,108.15 159.5,108.15 C176.9,108.15 193.07,102.99 208,92.65 C184.52,85.77 165.19,82.32 150,82.32 C134.81,82.32 117.28,87.58 97.41,98.09 Z" fill="#F48FB1" fill-opacity="0.45"/>
+          <path id="Skirt-Main" d="M117,0 C139.55,-6.45 160.88,-6.45 181,0 C188,31.94 205.01,44.61 208,93.58 C174,110.47 132,81.53 97,98.01 C87,74.96 101,19.46 117,0 Z" fill="#F8BBD0" fill-opacity="0.85" stroke="#F48FB1" stroke-width="1.5"/>
+
+          <!-- BALLET POINTE SHOES & CRISS-CROSS SATIN ANKLE RIBBONS -->
+          <!-- Back Pointe Shoe -->
+          <g id="Pointe-Back" transform="translate(208, 199)" fill="#FFD1DC">
+            <path d="M2.68,25.4 C1.56,28.39 1,30.62 1,32.11 C1,33.91 1.3,36.54 1.9,40 C3.99,40 22.79,40 58.3,40 C59.77,35.15 58.92,32.54 55.76,32.15 C52.61,31.77 49.98,31.42 47.9,31.11 L21.68,19.42 C21.18,19.19 20.58,19.42 20.36,19.93 L18.66,24.04 C15.74,25.4 13.36,26.08 11.54,26.08 C10.05,26.08 8,25.48 5.38,24.29 C4.38,23.83 3.19,24.27 2.73,25.27 C2.71,25.31 2.69,25.36 2.68,25.4 Z" stroke="#E06385" stroke-width="2"/>
+            <!-- Satin Ribbons crossed up ankle -->
+            <path d="M12 25 L45 5" stroke="#E06385" stroke-width="2" stroke-linecap="round"/>
+            <path d="M45 25 L12 5" stroke="#E06385" stroke-width="2" stroke-linecap="round"/>
+          </g>
+
+          <!-- Front Pointe Shoe -->
+          <g id="Pointe-Front" transform="translate(24.5, 157) rotate(80) translate(-24.5, -157) translate(-6, 137)" fill="#FFD1DC">
+            <path d="M2.68,25.4 C1.56,28.39 1,30.62 1,32.11 C1,33.91 1.3,36.54 1.9,40 C3.99,40 22.79,40 58.3,40 C59.77,35.15 58.92,32.54 55.76,32.15 C52.61,31.77 49.98,31.42 47.9,31.11 L21.68,19.42 C21.18,19.19 20.58,19.42 20.36,19.93 L18.66,24.04 C15.74,25.4 13.36,26.08 11.54,26.08 C10.05,26.08 8,25.48 5.38,24.29 C4.38,23.83 3.19,24.27 2.73,25.27 C2.71,25.31 2.69,25.36 2.68,25.4 Z" stroke="#E06385" stroke-width="2"/>
+            <!-- Satin Ribbons crossed up ankle -->
+            <path d="M12 25 L45 5" stroke="#E06385" stroke-width="2" stroke-linecap="round"/>
+            <path d="M45 25 L12 5" stroke="#E06385" stroke-width="2" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- 2. TORSO: ELEGANT BALLET LEOTARD (Deep Charcoal / Black Velvet Contrast) -->
+        <g id="TORSO" transform="translate(22, 82)">
+          <!-- Bare Skin Arms -->
+          <path id="Skin-Arms" d="M158.64,42.7 L193.35,23.69 C199.12,16.84 204.81,11.51 210.41,7.72 C212.12,7.01 215.11,6.57 212.31,11.54 C209.52,16.51 206.79,21.86 208.22,23.39 C209.65,24.92 213.2,22.79 214.9,25.33 C216.04,27.02 209.96,29.7 196.68,33.37 L171.46,56.46 L158.64,42.7 Z M213,58.74 L228.25,50.36 C230.39,42.22 232.94,38.13 235.92,38.08 C238.2,37.01 234.22,47.3 238.56,46.41 C242.89,45.52 253.46,37.65 255.29,39.25 C257.98,41.61 255.58,48.86 252.75,52.47 C247.45,59.22 243.07,61.52 232.24,64.54 C226.57,66.12 220.45,69.29 213.87,74.04 L213,58.74 Z" fill="#F2C8B0"/>
+
+          <!-- Elegant Ballet Leotard Top -->
+          <path id="Sleeve-Right" d="M142.86,34.75 C154.89,36.53 171.3,36.53 190.1,28.39 L194.44,44.41 C180.81,54.24 162.71,61.23 148.29,58.52 C136.92,56.4 133.27,41.66 142.86,34.75 Z" fill="#242028" transform="translate(165.9, 43.75) rotate(-9) translate(-165.9, -43.75)"/>
+          <path id="Top-Body" d="M158.1,62.76 C171.01,65.98 192.65,62.18 223.04,51.37 C230.57,66.96 234.06,78.08 233.49,84.72 C207.42,98.33 185.09,104.4 166.68,104.8 C167.27,115.72 165.94,126.11 161.47,135.61 C152.29,155.12 98.55,137.05 80.47,140.61 C69.16,103.85 91.04,88.91 91.06,65.4 C91.07,39.64 111.75,0 114.8,0 L142.54,0 C144.07,19.67 151.78,41.35 158.1,62.76 Z" fill="#2D2833"/>
+
+          <!-- Smartphone in hand -->
+          <g id="Hand-Phone" transform="translate(230, 15) scale(0.65)">
+            <rect x="0" y="0" width="45" height="75" rx="8" fill="#1C1820" stroke="#FFFFFF" stroke-width="2"/>
+            <rect x="4" y="5" width="37" height="63" rx="5" fill="#FFF0F5"/>
+            <rect x="16" y="8" width="14" height="3" rx="1.5" fill="#1C1820"/>
+            <rect x="8" y="18" width="22" height="5" rx="2" fill="#F48FB1"/>
+            <rect x="14" y="27" width="23" height="5" rx="2" fill="#E06385"/>
+            <rect x="8" y="36" width="25" height="5" rx="2" fill="#F48FB1"/>
+          </g>
+        </g>
+
+        <!-- 3. HEAD: CHIC CLASSICAL BALLERINA CHONGO / BUN -->
+        <g id="HEAD" transform="translate(82, 0)">
+          <g id="Head-Skin" transform="translate(54, 31)" fill="#F2C8B0">
+            <path d="M8.26,34.49 C3.65,29.08 0.54,22.45 1.06,15.03 C2.56,-6.38 32.35,-1.67 38.14,9.13 C43.94,19.94 43.25,47.33 35.76,49.26 C32.77,50.03 26.41,48.15 19.94,44.24 L24,73 L0,73 L8.26,34.49 Z"/>
+            <circle cx="28" cy="40" r="3" fill="#F48FB1"/>
+          </g>
+
+          <!-- Ballerina Bun (Chongo) in Deep Rich Brunette -->
+          <path id="Hair-Chongo" d="M82.66,28.37 C79.38,27.37 74.62,27.03 72.62,27.26 C73.76,24.53 74.21,21.49 73.84,18.53 C73.49,15.65 72.2,13.2 71.01,10.64 C70.46,9.45 69.84,8.28 68.92,7.37 C67.97,6.45 66.78,5.84 65.53,5.55 C64.24,5.25 62.91,5.28 61.62,5.55 C61.05,5.67 60.54,5.93 59.99,6.07 C59.42,6.22 59.14,5.86 58.73,5.5 C57.73,4.64 56.27,4.21 55.01,4.06 C53.59,3.89 52.12,4.1 50.77,4.57 C49.46,5.02 48.19,5.76 47.24,6.83 C46.82,7.3 46.44,7.85 46.19,8.45 C46.09,8.69 46.07,8.84 45.82,8.93 C45.6,9.01 45.33,9.01 45.1,9.09 C42.83,9.86 40.89,11.61 39.84,13.86 C39.22,15.17 38.93,17.48 39.01,20.07 C39.09,22.66 41.43,29.41 43.61,31.87 C45.56,34.07 48.43,35.52 51.2,36.16 C49.36,38.25 48.14,40.88 47.24,43.55 C46.25,46.45 45.65,49.46 45.42,52.53 C45.21,55.44 45.19,58.52 45.87,61.38 C46.51,64.04 47.88,66.23 50.16,67.62 C51.21,68.26 52.33,68.74 53.46,69.17 C54.58,69.6 55.7,70.02 56.86,70.26 C59.07,70.72 61.62,70.64 63.32,68.88 C63.94,68.25 64.61,67.45 65.06,66.68 C65.22,66.4 65.32,66.21 65.12,65.94 C64.89,65.62 64.51,65.37 64.21,65.11 C62.49,63.66 61.43,61.71 61.16,59.4 C60.89,57.06 61.52,54.04 63.8,53.02 C66.61,51.76 69.7,53.2 72.2,54.55 C73.26,50.81 75.45,47.43 78.86,45.71 C82.65,43.81 86.98,43.59 90.87,41.96 C91.88,41.53 92.92,41.05 93.66,40.18 C93.97,39.82 94.34,39.35 94.46,38.87 C94.63,38.24 94.22,37.71 93.91,37.22 C92.25,34.62 85.94,29.37 82.66,28.37" fill="#291811"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Subtítulo en Safe Zone (38% desde la base) -->
+  <div class="subtitle-safezone">
+    <div class="subtitle-text">
+      ¿Cansada de buscar clases de <span class="highlight-pink">Ballet</span> y que no coincidan los horarios?
+    </div>
+  </div>
+
+  <!-- Barra inferior con 'Bailapp' todo junto -->
+  <div class="app-preview-bar">
+    <div class="logo-name">
+      🩰 Bailapp
+    </div>
+    <div class="cta-pill">RESERVÁ TU CLASE YA</div>
+  </div>
+
+</body>
+</html>

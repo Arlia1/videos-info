@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920">
+  <title>Bailapp - Estilo Paper Cut / Papercraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Cabinet+Grotesk:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #F5EBE6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      position: relative;
+      color: #382A2A;
+    }
+
+    /* Paper Craft Layer Shadows */
+    .paper-shadow-1 {
+      filter: drop-shadow(0 15px 25px rgba(80, 50, 60, 0.15));
+    }
+    .paper-shadow-2 {
+      filter: drop-shadow(0 25px 35px rgba(80, 50, 60, 0.22));
+    }
+    .paper-shadow-3 {
+      filter: drop-shadow(0 35px 50px rgba(80, 50, 60, 0.28));
+    }
+
+    /* Tactile Paper Texture Overlay */
+    .paper-texture {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: radial-gradient(#302020 1px, transparent 1px);
+      background-size: 8px 8px;
+      mix-blend-mode: multiply;
+      z-index: 50;
+    }
+
+    /* Header */
+    .header-paper {
+      position: absolute;
+      top: 80px;
+      left: 70px;
+      right: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+      padding: 24px 38px;
+      border-radius: 28px;
+      box-shadow: 0 16px 36px rgba(168, 120, 135, 0.2);
+      z-index: 20;
+    }
+
+    .brand-paper {
+      font-size: 32px;
+      font-weight: 800;
+      color: #D45D79;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .paper-badge {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: #FCEEF1;
+      color: #B54A65;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 2px dashed #E8A7B8;
+    }
+
+    /* Title Block */
+    .title-paper-card {
+      position: absolute;
+      top: 230px;
+      left: 70px;
+      right: 70px;
+      background: #FFFDF9;
+      padding: 44px 48px;
+      border-radius: 36px;
+      box-shadow: 0 20px 45px rgba(168, 120, 135, 0.18);
+      z-index: 20;
+    }
+
+    .title-pill {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 800;
+      color: #D45D79;
+      background: #FCEEF1;
+      padding: 8px 18px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .title-paper-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.22;
+      color: #2D1A22;
+    }
+
+    .title-paper-card h1 em {
+      font-style: italic;
+      color: #D45D79;
+    }
+
+    /* Main Section: Curved Layered Paper Background with Dancer Cutout */
+    .stage-paper-container {
+      position: absolute;
+      top: 480px;
+      left: 70px;
+      right: 70px;
+      height: 890px;
+      z-index: 10;
+    }
+
+    /* Safe Zone Subtitle Box (38% safe zone) */
+    .paper-safe-zone {
+      position: absolute;
+      bottom: 270px;
+      left: 70px;
+      right: 70px;
+      background: #FFFFFF;
+      padding: 32px 42px;
+      border-radius: 32px;
+      box-shadow: 0 24px 50px rgba(140, 90, 110, 0.25);
+      border-left: 10px solid #D45D79;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 30;
+    }
+
+    .paper-quote-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 20px;
+      background: #FCEEF1;
+      color: #D45D79;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .paper-safe-content h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #D45D79;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .paper-safe-content p {
+      font-size: 24px;
+      font-weight: 600;
+      color: #382A2A;
+      line-height: 1.35;
+    }
+
+    /* Bottom CTA Pill */
+    .paper-cta {
+      position: absolute;
+      bottom: 120px;
+      left: 70px;
+      right: 70px;
+      background: linear-gradient(135deg, #D45D79 0%, #EA8685 100%);
+      padding: 24px;
+      border-radius: 28px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+      box-shadow: 0 18px 40px rgba(212, 93, 121, 0.35);
+      letter-spacing: 0.5px;
+      z-index: 30;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="paper-texture"></div>
+
+  <!-- Header -->
+  <div class="header-paper">
+    <div class="brand-paper">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#D45D79" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </svg>
+      Bailapp
+    </div>
+    <div class="paper-badge">ESTILO: PAPER CUT</div>
+  </div>
+
+  <!-- Title Card -->
+  <div class="title-paper-card">
+    <div class="title-pill">&#10024; ELEGANCIA &amp; RITMO</div>
+    <h1>La forma más simple de encontrar tu <em>espacio para bailar</em></h1>
+  </div>
+
+  <!-- Stage Container with Multi-Layered Paper Cutout Art -->
+  <div class="stage-paper-container">
+    <svg width="100%" height="100%" viewBox="0 0 940 890" style="overflow: visible;">
+      <defs>
+        <!-- Soft Realistic Paper Drop Shadows -->
+        <filter id="layer-shadow-1" x="-10%" y="-10%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#8E5E6E" flood-opacity="0.18" />
+        </filter>
+        <filter id="layer-shadow-2" x="-10%" y="-10%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#704455" flood-opacity="0.22" />
+        </filter>
+        <filter id="layer-shadow-3" x="-10%" y="-10%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="32" stdDeviation="28" flood-color="#552B3C" flood-opacity="0.25" />
+        </filter>
+        <filter id="card-soft-shadow" x="-10%" y="-10%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#A87887" flood-opacity="0.2" />
+        </filter>
+      </defs>
+
+      <!-- BASE PAPER CONTAINER FRAME -->
+      <rect x="0" y="0" width="940" height="890" rx="44" fill="#FDF7F4" filter="url(#card-soft-shadow)"/>
+
+      <!-- LAYER 1: Deep Soft Rose Wave (Back) -->
+      <path d="M 0,160 Q 250,90 480,180 T 940,120 L 940,890 L 0,890 Z" fill="#F3D5DF" filter="url(#layer-shadow-1)" />
+
+      <!-- LAYER 2: Warm Peachy Cream Wave (Mid-Back) -->
+      <path d="M 0,270 Q 300,340 550,240 T 940,290 L 940,890 L 0,890 Z" fill="#FDEEE6" filter="url(#layer-shadow-2)" />
+
+      <!-- LAYER 3: Soft Blush Wave (Mid-Front) -->
+      <path d="M 0,420 Q 260,370 520,440 T 940,390 L 940,890 L 0,890 Z" fill="#F8CBD8" filter="url(#layer-shadow-3)" />
+
+      <!-- LAYER 4: Foreground Elegant Curve -->
+      <path d="M 0,580 Q 280,640 600,560 T 940,620 L 940,890 L 0,890 Z" fill="#FFFFFF" filter="url(#layer-shadow-2)" />
+
+      <!-- LEFT SIDE PAPER FLOATING CARDS (Tactile Cutouts) -->
+      <!-- Card 1: Studio Info -->
+      <g transform="translate(45, 60)" filter="url(#card-soft-shadow)">
+        <rect width="360" height="135" rx="24" fill="#FFFFFF"/>
+        <circle cx="50" cy="50" r="24" fill="#FCEEF1"/>
+        <text x="50" y="58" font-family="'Plus Jakarta Sans'" font-size="22" font-weight="800" fill="#D45D79" text-anchor="middle">&#127912;</text>
+        <text x="90" y="44" font-family="'Plus Jakarta Sans'" font-size="14" font-weight="800" fill="#D45D79" letter-spacing="0.5">ESTUDIO ASOCIADO</text>
+        <text x="90" y="72" font-family="'Plus Jakarta Sans'" font-size="19" font-weight="700" fill="#2D1A22">Danzar Buenos Aires</text>
+        <text x="90" y="98" font-family="'Plus Jakarta Sans'" font-size="15" font-weight="500" fill="#75626A">Palermo &bull; Cupo disponible</text>
+      </g>
+
+      <!-- Card 2: Schedule Notification -->
+      <g transform="translate(45, 230)" filter="url(#card-soft-shadow)">
+        <rect width="360" height="130" rx="24" fill="#FFFFFF"/>
+        <circle cx="50" cy="50" r="24" fill="#E8F8F5"/>
+        <text x="50" y="58" font-family="'Plus Jakarta Sans'" font-size="22" font-weight="800" fill="#1ABC9C" text-anchor="middle">&#10003;</text>
+        <text x="90" y="44" font-family="'Plus Jakarta Sans'" font-size="14" font-weight="800" fill="#1ABC9C" letter-spacing="0.5">RESERVA CONFIRMADA</text>
+        <text x="90" y="72" font-family="'Plus Jakarta Sans'" font-size="19" font-weight="700" fill="#2D1A22">Ballet Contemporáneo</text>
+        <text x="90" y="98" font-family="'Plus Jakarta Sans'" font-size="15" font-weight="500" fill="#75626A">Hoy a las 18:30 hs</text>
+      </g>
+
+      <!-- RIGHT SIDE: LAYERED PAPERCRAFT DANCER SILHOUETTE (Graceful adult dancer, loose hair) -->
+      <g transform="translate(460, 40)" filter="url(#layer-shadow-3)">
+        
+        <!-- Dancer Hair Back Shadow (Cutout layer) -->
+        <path d="M 230,120 Q 200,160 210,250 Q 230,220 250,190 Z" fill="#422C38" opacity="0.3" />
+
+        <!-- Dancer Torso & Legs (Deep Plum Silhouette for High Contrast Papercut) -->
+        <!-- Extended Leg 1 -->
+        <path d="M 260,370 Q 290,470 330,620 Q 315,625 295,510 Q 265,420 250,380 Z" fill="#3D2635"/>
+        <!-- Standing / Supporting Leg -->
+        <path d="M 225,370 Q 220,480 215,630 Q 235,632 245,490 Q 255,420 255,370 Z" fill="#3D2635"/>
+
+        <!-- Dancer Ballet Pointe Shoes in Ribbon Peach -->
+        <ellipse cx="225" cy="635" rx="14" ry="8" fill="#F8CBD8"/>
+        <ellipse cx="325" cy="625" rx="14" ry="8" fill="#F8CBD8"/>
+        <!-- Ribbon wraps -->
+        <path d="M 216,610 L 235,618 M 216,590 L 235,598" stroke="#F8CBD8" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 310,600 L 328,608 M 305,580 L 322,588" stroke="#F8CBD8" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- Paper Tulle Skirt (Layered curved cuts) -->
+        <!-- Skirt Layer 1 (Back) -->
+        <path d="M 205,330 Q 150,380 170,410 Q 240,430 320,390 Q 300,340 270,330 Z" fill="#D45D79" opacity="0.5"/>
+        <!-- Skirt Layer 2 (Mid) -->
+        <path d="M 210,330 Q 160,365 185,395 Q 245,410 305,380 Q 295,340 265,330 Z" fill="#E88CA3" opacity="0.8"/>
+        <!-- Skirt Layer 3 (Top Petals) -->
+        <path d="M 215,330 Q 180,355 200,380 Q 240,390 285,365 Q 275,340 255,330 Z" fill="#FFF0F5"/>
+
+        <!-- Bodice / Leotard (Deep Plum) -->
+        <path d="M 220,240 Q 215,290 220,335 L 265,335 Q 270,290 265,240 Z" fill="#3D2635"/>
+        <path d="M 220,240 Q 242,260 265,240" stroke="#FFF0F5" stroke-width="3" fill="none"/>
+
+        <!-- Graceful Extended Arms -->
+        <!-- Left arm extended upwards -->
+        <path d="M 220,245 Q 160,180 150,110 Q 162,110 185,170 Q 210,220 225,245 Z" fill="#3D2635"/>
+        <!-- Right arm curved gracefully -->
+        <path d="M 265,245 Q 330,220 370,170 Q 375,182 340,240 Q 300,270 265,260 Z" fill="#3D2635"/>
+
+        <!-- Head & Neck -->
+        <path d="M 235,240 L 235,200 L 250,200 L 250,240 Z" fill="#3D2635"/>
+        <ellipse cx="242" cy="180" rx="22" ry="26" fill="#3D2635"/>
+
+        <!-- Loose Flowing Hair (No ponytail - requested rule) -->
+        <path d="M 225,160 Q 190,180 180,240 Q 210,230 230,195 Z" fill="#241320"/>
+        <path d="M 245,155 Q 275,170 285,225 Q 265,220 250,185 Z" fill="#241320"/>
+
+        <!-- Paper Cut Floating Sparkles / Leaves -->
+        <circle cx="130" cy="90" r="12" fill="#D45D79" filter="url(#layer-shadow-1)"/>
+        <circle cx="390" cy="140" r="16" fill="#F8CBD8" filter="url(#layer-shadow-1)"/>
+        <path d="M 170,60 Q 185,45 200,60 Q 185,75 170,60 Z" fill="#EA8685"/>
+        <path d="M 360,90 Q 375,75 390,90 Q 375,105 360,90 Z" fill="#D45D79"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Safe Zone Subtitle Box -->
+  <div class="paper-safe-zone">
+    <div class="paper-quote-icon">&#10077;</div>
+    <div class="paper-safe-content">
+      <h3>Conectá con tu pasión</h3>
+      <p>"Conocé profesores, horarios y reservá en los estudios de baile de tu ciudad con un solo toque."</p>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="paper-cta">
+    Descubrí Bailapp &bull; Tu próxima clase te espera
+  </div>
+
+</body>
+</html>

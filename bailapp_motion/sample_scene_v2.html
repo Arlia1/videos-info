@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: linear-gradient(180deg, #FFF6F8 0%, #FDE8EE 35%, #FAD2DF 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Decorative soft shapes */
+  .bg-circle-glow {
+    position: absolute;
+    top: 280px;
+    width: 780px;
+    height: 780px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(254, 218, 230, 0.5) 60%, transparent 100%);
+    filter: blur(10px);
+    z-index: 1;
+  }
+
+  .bg-arch {
+    position: absolute;
+    top: 200px;
+    width: 860px;
+    height: 1300px;
+    border-radius: 430px 430px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 245, 248, 0.6) 70%, rgba(250, 210, 223, 0.2) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 30px 70px rgba(224, 99, 133, 0.10);
+    z-index: 2;
+  }
+
+  /* Header Badge - 100% en español */
+  .header-badge {
+    position: absolute;
+    top: 130px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFFFFF;
+    padding: 16px 38px;
+    border-radius: 100px;
+    box-shadow: 0 12px 35px rgba(224, 99, 133, 0.16);
+    border: 2px solid #FAD2E1;
+    z-index: 10;
+  }
+  .header-badge .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #E06385;
+    box-shadow: 0 0 14px #E06385;
+  }
+  .header-badge span {
+    font-size: 25px;
+    font-weight: 800;
+    color: #4A3E4D;
+    letter-spacing: 0.5px;
+  }
+
+  /* Main Illustration Container */
+  .illustration-container {
+    position: absolute;
+    top: 320px;
+    width: 900px;
+    height: 1050px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+  }
+
+  /* Floating UI Cards - 100% en español con detalles de danza */
+  .floating-card {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 26px;
+    padding: 20px 28px;
+    box-shadow: 0 20px 45px rgba(216, 27, 96, 0.12);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 2px solid #FCE4EC;
+    z-index: 15;
+  }
+
+  .card-top-left {
+    top: 450px;
+    left: 45px;
+    transform: rotate(-3deg);
+  }
+
+  .card-mid-right {
+    top: 740px;
+    right: 45px;
+    transform: rotate(4deg);
+  }
+
+  .card-bottom-left {
+    top: 1100px;
+    left: 60px;
+    transform: rotate(-2deg);
+  }
+
+  .icon-bubble {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .icon-bubble.grey { background: #F5EBF0; color: #8C7A87; }
+  .icon-bubble.pink { background: #FFE4EC; color: #E06385; }
+  .icon-bubble.red { background: #FFEBEE; color: #E53935; }
+
+  .card-text .title {
+    font-size: 25px;
+    font-weight: 800;
+    color: #382E39;
+    margin-bottom: 4px;
+  }
+  .card-text .subtitle {
+    font-size: 19px;
+    font-weight: 600;
+    color: #9C8997;
+  }
+
+  /* Subtítulos en Safe Zone (38% desde la base) */
+  .subtitle-safezone {
+    position: absolute;
+    bottom: 300px;
+    width: 920px;
+    text-align: center;
+    z-index: 20;
+    padding: 24px 32px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    border-radius: 36px;
+    border: 2px solid #FAD2E1;
+    box-shadow: 0 22px 55px rgba(74, 62, 77, 0.08);
+  }
+
+  .subtitle-text {
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: #2D242E;
+  }
+
+  .highlight-pink {
+    color: #C2185B;
+    background: #FCE4EC;
+    padding: 2px 14px;
+    border-radius: 14px;
+    display: inline-block;
+  }
+
+  /* Barra inferior de la app - bailapp todo junto */
+  .app-preview-bar {
+    position: absolute;
+    bottom: 110px;
+    width: 880px;
+    background: #2D242E;
+    color: #FFFFFF;
+    padding: 22px 38px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 20px 45px rgba(45, 36, 46, 0.22);
+  }
+  .app-preview-bar .logo-name {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-preview-bar .logo-name .icon {
+    font-size: 32px;
+  }
+  .app-preview-bar .cta-pill {
+    background: #F8BBD0;
+    color: #880E4F;
+    font-size: 21px;
+    font-weight: 800;
+    padding: 14px 30px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-circle-glow"></div>
+  <div class="bg-arch"></div>
+
+  <!-- Header Badge en español -->
+  <div class="header-badge">
+    <div class="dot"></div>
+    <span>LA REALIDAD DE BUSCAR CLASES</span>
+  </div>
+
+  <!-- Tarjetas flotantes 100% en español -->
+  <div class="floating-card card-top-left">
+    <div class="icon-bubble grey">💬</div>
+    <div class="card-text">
+      <div class="title">"¿Tienen cupos en Heels?"</div>
+      <div class="subtitle">Visto hace 3 días · Sin respuesta</div>
+    </div>
+  </div>
+
+  <div class="floating-card card-mid-right">
+    <div class="icon-bubble red">⚠️</div>
+    <div class="card-text">
+      <div class="title">"Solo nivel avanzado profesional"</div>
+      <div class="subtitle">Vos recién arrancabas...</div>
+    </div>
+  </div>
+
+  <div class="floating-card card-bottom-left">
+    <div class="icon-bubble pink">📍</div>
+    <div class="card-text">
+      <div class="title">Sede a 2 horas de tu casa</div>
+      <div class="subtitle">Un martes a las 14:00 hs 🙃</div>
+    </div>
+  </div>
+
+  <!-- Personaje Vectorial Estilizado (Ilustración editorial de alta calidad) -->
+  <div class="illustration-container">
+    <svg width="780" height="880" viewBox="0 0 780 880" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients for subtle depth -->
+        <linearGradient id="hoodieGrad" x1="280" y1="360" x2="480" y2="580" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFD6E3"/>
+          <stop offset="100%" stop-color="#F48FB1"/>
+        </linearGradient>
+        <linearGradient id="pantsGrad" x1="260" y1="560" x2="520" y2="800" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFF8E7"/>
+          <stop offset="100%" stop-color="#EADAB2"/>
+        </linearGradient>
+        <linearGradient id="hairGrad" x1="320" y1="140" x2="460" y2="340" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#3B261D"/>
+          <stop offset="100%" stop-color="#24140D"/>
+        </linearGradient>
+        <linearGradient id="skinGrad" x1="340" y1="200" x2="440" y2="360" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFE0D1"/>
+          <stop offset="100%" stop-color="#F7C8B4"/>
+        </linearGradient>
+        <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#E06385" flood-opacity="0.18"/>
+        </filter>
+      </defs>
+
+      <!-- Floor Shadow beneath the seated dancer -->
+      <ellipse cx="390" cy="800" rx="280" ry="32" fill="#E8BCC8" fill-opacity="0.45"/>
+
+      <!-- SEATED DANCER FIGURE (Cross-legged chic floor stretch pose) -->
+
+      <!-- Back Leg / Pants Fold -->
+      <path d="M230 730 C220 680, 270 630, 350 630 C430 630, 480 670, 500 710 C460 740, 390 755, 310 750 C260 748, 235 740, 230 730 Z" fill="url(#pantsGrad)" filter="url(#softShadow)"/>
+
+      <!-- Left Leg (Crossing in front) -->
+      <path d="M250 610 C210 650, 200 720, 260 755 C330 790, 470 780, 530 745 C550 730, 540 700, 500 680 C440 650, 360 600, 290 605 Z" fill="url(#pantsGrad)" stroke="#DFCF9E" stroke-width="3"/>
+      <!-- Pants fabric fold creases -->
+      <path d="M280 670 C310 690, 380 705, 430 700" stroke="#D1BE8A" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M310 720 C360 740, 440 735, 480 720" stroke="#D1BE8A" stroke-width="3.5" stroke-linecap="round"/>
+
+      <!-- Sneakers (Left Sneaker visible at side) -->
+      <!-- Left sneaker sole & body -->
+      <path d="M510 715 C540 700, 580 720, 570 750 C550 765, 510 760, 495 740 Z" fill="#FFFFFF" stroke="#D6CBD2" stroke-width="3"/>
+      <path d="M515 745 C540 750, 565 750, 570 735" stroke="#F48FB1" stroke-width="4" stroke-linecap="round"/>
+      <!-- Right sneaker tip -->
+      <path d="M220 720 C205 730, 215 750, 240 755 C255 755, 260 745, 250 730 Z" fill="#FFFFFF" stroke="#D6CBD2" stroke-width="3"/>
+
+      <!-- Torso / Chic Pastel Pink Cropped Hoodie -->
+      <!-- Torso Base -->
+      <path d="M290 410 C270 470, 280 570, 340 590 C390 595, 460 580, 480 550 C495 480, 490 410, 460 410 C420 395, 340 395, 290 410 Z" fill="url(#hoodieGrad)" stroke="#F48FB1" stroke-width="3"/>
+
+      <!-- Hoodie Pocket with aesthetic contour -->
+      <path d="M330 520 C360 515, 420 515, 445 520 C440 560, 335 560, 330 520 Z" fill="#F48FB1" fill-opacity="0.55"/>
+      <!-- Hoodie drawstrings -->
+      <path d="M365 425 C365 460, 360 480, 365 500" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="365" cy="505" r="4" fill="#E06385"/>
+      <path d="M405 425 C405 460, 410 480, 405 495" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="405" cy="500" r="4" fill="#E06385"/>
+
+      <!-- Arms holding Smartphone -->
+      <!-- Left Arm & Sleeve -->
+      <path d="M295 415 C250 460, 245 525, 305 535 C320 535, 330 515, 320 500 C280 485, 285 450, 315 425 Z" fill="url(#hoodieGrad)" stroke="#F48FB1" stroke-width="3"/>
+      <!-- Right Arm & Sleeve -->
+      <path d="M465 415 C505 460, 510 525, 455 535 C440 535, 430 515, 440 500 C480 485, 475 450, 445 425 Z" fill="url(#hoodieGrad)" stroke="#F48FB1" stroke-width="3"/>
+
+      <!-- Hands with manicured nails -->
+      <circle cx="325" cy="525" r="15" fill="url(#skinGrad)"/>
+      <circle cx="435" cy="525" r="15" fill="url(#skinGrad)"/>
+
+      <!-- Modern Smartphone (Pastel case + Screen displaying chat) -->
+      <g filter="url(#softShadow)">
+        <rect x="345" y="465" width="75" height="120" rx="14" fill="#FFFFFF" stroke="#F48FB1" stroke-width="3.5"/>
+        <rect x="352" y="475" width="61" height="92" rx="8" fill="#FCE4EC"/>
+        <!-- Notch / Camera bar -->
+        <rect x="368" y="478" width="28" height="5" rx="2.5" fill="#2D242E"/>
+        <!-- Chat bubbles on phone screen -->
+        <rect x="358" y="492" width="40" height="10" rx="4" fill="#FFFFFF"/>
+        <rect x="368" y="508" width="40" height="10" rx="4" fill="#F48FB1"/>
+        <rect x="358" y="524" width="48" height="12" rx="4" fill="#FFFFFF"/>
+        <!-- Home bar -->
+        <rect x="370" y="558" width="24" height="3" rx="1.5" fill="#880E4F"/>
+      </g>
+
+      <!-- Neck & Collarbone -->
+      <path d="M365 370 L405 370 L400 420 L370 420 Z" fill="url(#skinGrad)"/>
+      <path d="M375 410 Q385 416 395 410" stroke="#E59882" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+      <!-- Head / Face (Refined elegant proportions) -->
+      <ellipse cx="385" cy="290" rx="65" ry="78" fill="url(#skinGrad)"/>
+
+      <!-- CHIC HAIRSTYLE: Messy High Bun with aesthetic Claw Clip & flowing strands -->
+      <!-- Back hair volume -->
+      <path d="M320 280 C310 180, 460 170, 460 280 C465 250, 450 200, 385 200 C320 200, 315 250, 320 280 Z" fill="url(#hairGrad)"/>
+      <!-- High Top Bun -->
+      <ellipse cx="385" cy="155" rx="55" ry="48" fill="url(#hairGrad)"/>
+      <path d="M350 165 C360 135, 410 135, 420 165" stroke="#5D3A2B" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <!-- Pastel Claw Clip -->
+      <rect x="365" y="145" width="40" height="24" rx="6" fill="#F48FB1" stroke="#FFFFFF" stroke-width="2.5"/>
+      <circle cx="378" cy="157" r="3" fill="#FFFFFF"/>
+      <circle cx="392" cy="157" r="3" fill="#FFFFFF"/>
+
+      <!-- Front Hairline & Curtain Bangs / Face Framing strands -->
+      <path d="M325 250 C335 220, 370 215, 385 235 C400 215, 435 220, 445 250 C435 230, 405 228, 385 245 C365 228, 335 230, 325 250 Z" fill="url(#hairGrad)"/>
+      <!-- Tendril strands framing cheeks -->
+      <path d="M325 260 Q315 310 322 345" stroke="#3B261D" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+      <path d="M445 260 Q455 310 448 345" stroke="#3B261D" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+
+      <!-- REFINED FACIAL DETAILS (Relatable, expressive dancer) -->
+      <!-- Eyebrows (Questioning / skeptical arch) -->
+      <path d="M340 258 Q360 250 372 260" stroke="#3B261D" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M428 258 Q408 250 396 260" stroke="#3B261D" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+      <!-- Eyes (Almond shaped, expressive eyelashes, looking down at phone) -->
+      <!-- Left Eye -->
+      <path d="M346 276 Q358 270 370 276" stroke="#2D242E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="358" cy="281" rx="6.5" ry="6" fill="#3B261D"/>
+      <circle cx="356" cy="279" r="2.2" fill="#FFFFFF"/>
+      <!-- Lashes -->
+      <path d="M344 274 L340 270" stroke="#2D242E" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M368 274 L373 270" stroke="#2D242E" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Right Eye -->
+      <path d="M400 276 Q412 270 424 276" stroke="#2D242E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="412" cy="281" rx="6.5" ry="6" fill="#3B261D"/>
+      <circle cx="410" cy="279" r="2.2" fill="#FFFFFF"/>
+      <!-- Lashes -->
+      <path d="M402 274 L397 270" stroke="#2D242E" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M426 274 L430 270" stroke="#2D242E" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Cute Nose tip -->
+      <path d="M382 295 Q385 302 388 295" stroke="#DE8B74" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+      <!-- Cheek Blush (Soft glow) -->
+      <circle cx="340" cy="302" r="14" fill="#FF8A80" fill-opacity="0.35"/>
+      <circle cx="430" cy="302" r="14" fill="#FF8A80" fill-opacity="0.35"/>
+
+      <!-- Mouth (Charming wry smile / 'no me jodas' expression) -->
+      <path d="M374 322 Q385 328 396 320" stroke="#C2185B" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+      <!-- Cute Pearl Stud Earrings in Pastel Pink -->
+      <circle cx="320" cy="298" r="4.5" fill="#FFFFFF" stroke="#F48FB1" stroke-width="1.5"/>
+      <circle cx="450" cy="298" r="4.5" fill="#FFFFFF" stroke="#F48FB1" stroke-width="1.5"/>
+
+      <!-- Floating Aesthetic Sparkles -->
+      <path d="M180 360 Q195 360 195 345 Q195 360 210 360 Q195 360 195 375 Q195 360 180 360 Z" fill="#F48FB1"/>
+      <path d="M600 320 Q615 320 615 305 Q615 320 630 320 Q615 320 615 335 Q615 320 600 320 Z" fill="#F48FB1"/>
+      <circle cx="215" cy="400" r="4" fill="#F48FB1" fill-opacity="0.6"/>
+      <circle cx="580" cy="360" r="5" fill="#F48FB1" fill-opacity="0.6"/>
+    </svg>
+  </div>
+
+  <!-- Subtítulo en Safe Zone (38% desde la base) -->
+  <div class="subtitle-safezone">
+    <div class="subtitle-text">
+      ¿Cansada de mandar <span class="highlight-pink">10 DMs</span> y que nadie conteste?
+    </div>
+  </div>
+
+  <!-- Barra de App inferior con 'Bailapp' todo junto -->
+  <div class="app-preview-bar">
+    <div class="logo-name">
+      <span class="icon">🩰</span> Bailapp
+    </div>
+    <div class="cta-pill">RESERVÁ TU CLASE YA</div>
+  </div>
+
+</body>
+</html>

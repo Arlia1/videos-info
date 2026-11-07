@@ -1,0 +1,50 @@
+[
+  {
+    "id": "line1",
+    "text": "¿Horas esperando que te pasen los horarios por DM?",
+    "say": "¿Horas esperando que te pasen los horarios por mensaje?",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+2%",
+    "t": 0.5
+  },
+  {
+    "id": "line2",
+    "text": "Estudios sin piso flotante que lastiman tus tobillos.",
+    "say": "Estudios sin piso flotante que lastiman tus tobillos.",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+0%",
+    "t": 4.2
+  },
+  {
+    "id": "line3",
+    "text": "Se acabaron las dudas. Llegó Bailapp.",
+    "say": "Se acabaron las dudas. Llegó Bailap.",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+3%",
+    "t": 9.0
+  },
+  {
+    "id": "line4",
+    "text": "Salas con piso técnico certificado y reserva en un toque.",
+    "say": "Salas con piso técnico certificado y reserva en un toque.",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+2%",
+    "t": 14.2
+  },
+  {
+    "id": "line5",
+    "text": "Enfócate en tu arte. Elige tus maestras y tus salas.",
+    "say": "Enfócate en tu arte. Elige tus maestras y tus salas.",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+2%",
+    "t": 20.2
+  },
+  {
+    "id": "line6",
+    "text": "Bailapp · El marketplace para la danza. Descárgala ya.",
+    "say": "Bailap, el marketplace para la danza. Descárgala ya.",
+    "voice": "es-ES-ElviraNeural",
+    "rate": "+4%",
+    "t": 25.8
+  }
+]

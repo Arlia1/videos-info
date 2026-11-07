@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920">
+  <title>Bailapp - Estilo Pixel Explain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      image-rendering: pixelated;
+    }
+
+    body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #FCEEF3;
+      font-family: 'Space Grotesk', sans-serif;
+      position: relative;
+      color: #2D1A2E;
+    }
+
+    /* Pixel Grid Background */
+    .pixel-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(235, 185, 205, 0.25) 2px, transparent 2px),
+        linear-gradient(to bottom, rgba(235, 185, 205, 0.25) 2px, transparent 2px);
+    }
+
+    /* Floating retro pastel pixel clouds & stars */
+    .pixel-decor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Header */
+    .header-bar {
+      position: absolute;
+      top: 80px;
+      left: 70px;
+      right: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+      border: 6px solid #2D1A2E;
+      box-shadow: 10px 10px 0px #F3AEC6;
+      padding: 22px 35px;
+    }
+
+    .brand-logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 28px;
+      color: #D94680;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .retro-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 15px;
+      background: #FFF0F5;
+      color: #8E44AD;
+      border: 4px solid #2D1A2E;
+      padding: 10px 16px;
+    }
+
+    /* Title Block */
+    .title-banner {
+      position: absolute;
+      top: 240px;
+      left: 70px;
+      right: 70px;
+      background: #FFFFFF;
+      border: 6px solid #2D1A2E;
+      box-shadow: 12px 12px 0px #EBA3BD;
+      padding: 40px;
+    }
+
+    .pixel-subtitle-tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      color: #D94680;
+      background: #FFE8F0;
+      display: inline-block;
+      padding: 8px 14px;
+      border: 3px solid #D94680;
+      margin-bottom: 20px;
+    }
+
+    .title-banner h1 {
+      font-size: 46px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #2D1A2E;
+    }
+
+    .title-banner h1 span {
+      background: #FFD166;
+      padding: 0 8px;
+      border: 3px solid #2D1A2E;
+    }
+
+    /* Stage Area: Left UI cards, Right Pixel Dancer */
+    .main-stage {
+      position: absolute;
+      top: 480px;
+      left: 70px;
+      right: 70px;
+      height: 880px;
+      display: flex;
+      gap: 35px;
+    }
+
+    .pixel-cards-col {
+      width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 2;
+    }
+
+    .pixel-card {
+      background: #FFFFFF;
+      border: 6px solid #2D1A2E;
+      padding: 24px;
+      box-shadow: 8px 8px 0px #48CAE4;
+    }
+
+    .pixel-card.pink {
+      box-shadow: 8px 8px 0px #F3AEC6;
+    }
+
+    .pixel-card.green {
+      box-shadow: 8px 8px 0px #90BE6D;
+    }
+
+    .pixel-card-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #7209B7;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pixel-card-body {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2D1A2E;
+      line-height: 1.35;
+    }
+
+    .pixel-stat-bar {
+      margin-top: 14px;
+      height: 20px;
+      background: #E0E0E0;
+      border: 3px solid #2D1A2E;
+      position: relative;
+    }
+
+    .pixel-stat-fill {
+      height: 100%;
+      background: #06D6A0;
+      width: 85%;
+    }
+
+    /* Dancer Canvas / Box */
+    .pixel-character-box {
+      flex: 1;
+      height: 100%;
+      background: #FFFFFF;
+      border: 6px solid #2D1A2E;
+      box-shadow: 12px 12px 0px #F3AEC6;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 30px;
+    }
+
+    .stage-label {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      background: #2D1A2E;
+      color: #06D6A0;
+      padding: 8px 12px;
+    }
+
+    .pixel-dancer-svg {
+      width: 420px;
+      height: 700px;
+    }
+
+    /* Safe Zone Subtitle Card */
+    .safe-zone-card {
+      position: absolute;
+      bottom: 270px; /* Safe zone: 38% */
+      left: 70px;
+      right: 70px;
+      background: #2D1A2E;
+      border: 6px solid #FFFFFF;
+      box-shadow: 10px 10px 0px #D94680;
+      padding: 30px 40px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      z-index: 10;
+    }
+
+    .avatar-pixel {
+      width: 70px;
+      height: 70px;
+      background: #F3AEC6;
+      border: 4px solid #FFFFFF;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 26px;
+    }
+
+    .safe-zone-text {
+      flex: 1;
+    }
+
+    .safe-zone-speaker {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #06D6A0;
+      margin-bottom: 8px;
+    }
+
+    .safe-zone-phrase {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .cta-banner {
+      position: absolute;
+      bottom: 120px;
+      left: 70px;
+      right: 70px;
+      background: #06D6A0;
+      border: 6px solid #2D1A2E;
+      box-shadow: 10px 10px 0px #2D1A2E;
+      padding: 24px;
+      text-align: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 18px;
+      color: #2D1A2E;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pixel Grid BG -->
+  <div class="pixel-bg"></div>
+
+  <!-- Header -->
+  <div class="header-bar">
+    <div class="brand-logo">
+      <svg width="34" height="34" viewBox="0 0 16 16" style="shape-rendering: crispEdges;">
+        <rect x="6" y="2" width="4" height="2" fill="#D94680"/>
+        <rect x="4" y="4" width="8" height="2" fill="#D94680"/>
+        <rect x="2" y="6" width="12" height="4" fill="#D94680"/>
+        <rect x="4" y="10" width="8" height="2" fill="#D94680"/>
+        <rect x="6" y="12" width="4" height="2" fill="#D94680"/>
+      </svg>
+      Bailapp
+    </div>
+    <div class="retro-badge">ESTILO: PIXEL EXPLAIN</div>
+  </div>
+
+  <!-- Title Banner -->
+  <div class="title-banner">
+    <div class="pixel-subtitle-tag">&#9654; NINGÚN DM SIN RESPUESTA</div>
+    <h1>¿Buscás clase de baile? <span>Bailapp</span> te muestra cupos en vivo</h1>
+  </div>
+
+  <!-- Main Stage -->
+  <div class="main-stage">
+    
+    <!-- Left Column: Status / Cards -->
+    <div class="pixel-cards-col">
+      <div class="pixel-card pink">
+        <div class="pixel-card-header">&#128172; MENSAJES IG</div>
+        <div class="pixel-card-body">"Hola, ¿te queda lugar para urbano hoy a las 19hs?"</div>
+        <div style="font-size: 14px; color: #E63946; margin-top: 8px; font-weight: bold;">[Visto hace 6 horas]</div>
+      </div>
+
+      <div class="pixel-card green">
+        <div class="pixel-card-header">&#9889; CON BAILAPP</div>
+        <div class="pixel-card-body">Estudio Flow &bull; Urbano Intermedio</div>
+        <div class="pixel-stat-bar">
+          <div class="pixel-stat-fill"></div>
+        </div>
+        <div style="font-size: 14px; color: #058c68; margin-top: 6px; font-weight: bold;">¡Cupo reservado al instante!</div>
+      </div>
+
+      <div class="pixel-card">
+        <div class="pixel-card-header">&#9733; NIVEL DE DIVERSIÓN</div>
+        <div class="pixel-card-body">+250 PUNTOS DE RITMO</div>
+      </div>
+    </div>
+
+    <!-- Right Column: Pixel Art Dancer Box -->
+    <div class="pixel-character-box">
+      <div class="stage-label">PLAYER 1: SOFÍA (20)</div>
+
+      <!-- Crisp Pixel Art Dancer SVG -->
+      <svg class="pixel-dancer-svg" viewBox="0 0 240 400" style="shape-rendering: crispEdges;">
+        <!-- Shadow -->
+        <ellipse cx="120" cy="385" rx="75" ry="12" fill="#F3AEC6" opacity="0.6"/>
+
+        <!-- Hair (Back - Loose Brunette) -->
+        <rect x="85" y="70" width="70" height="90" fill="#2E1C2B"/>
+        <rect x="75" y="90" width="20" height="110" fill="#2E1C2B"/>
+        <rect x="145" y="90" width="20" height="110" fill="#2E1C2B"/>
+
+        <!-- Head / Face -->
+        <rect x="95" y="60" width="50" height="60" fill="#F3D5C0"/>
+        <!-- Cheeks blush -->
+        <rect x="97" y="95" width="10" height="8" fill="#F8A5C2"/>
+        <rect x="133" y="95" width="10" height="8" fill="#F8A5C2"/>
+        <!-- Eyes -->
+        <rect x="105" y="85" width="8" height="10" fill="#2E1C2B"/>
+        <rect x="127" y="85" width="8" height="10" fill="#2E1C2B"/>
+        <rect x="105" y="87" width="3" height="4" fill="#FFFFFF"/>
+        <rect x="127" y="87" width="3" height="4" fill="#FFFFFF"/>
+        <!-- Smile -->
+        <rect x="114" y="105" width="12" height="4" fill="#C44569"/>
+
+        <!-- Front Hair / Bangs (Loose modern wavy) -->
+        <rect x="90" y="50" width="60" height="20" fill="#4A2835"/>
+        <rect x="85" y="65" width="16" height="45" fill="#4A2835"/>
+        <rect x="139" y="65" width="16" height="50" fill="#4A2835"/>
+        <rect x="100" y="55" width="40" height="12" fill="#5E3343"/>
+
+        <!-- Neck -->
+        <rect x="112" y="120" width="16" height="15" fill="#E8C3AC"/>
+
+        <!-- Crop Top (Mint & Lavender Streetwear) -->
+        <rect x="95" y="135" width="50" height="50" fill="#70C1B3"/>
+        <rect x="102" y="135" width="36" height="20" fill="#FFEAA7"/>
+        <!-- Belly / Midriff -->
+        <rect x="100" y="185" width="40" height="15" fill="#F3D5C0"/>
+
+        <!-- Arms (Dancing dynamic pose) -->
+        <!-- Left arm up -->
+        <rect x="65" y="110" width="30" height="16" fill="#F3D5C0"/>
+        <rect x="55" y="80" width="18" height="40" fill="#F3D5C0"/>
+        <rect x="52" y="70" width="16" height="16" fill="#F3D5C0"/>
+        <!-- Right arm extended -->
+        <rect x="145" y="135" width="35" height="16" fill="#F3D5C0"/>
+        <rect x="175" y="145" width="18" height="35" fill="#F3D5C0"/>
+        <rect x="185" y="175" width="16" height="16" fill="#F3D5C0"/>
+
+        <!-- Wide Baggy Dance Cargo Pants (Pastel Lilac / Mauve) -->
+        <rect x="90" y="200" width="60" height="20" fill="#2D1A2E"/>
+        <rect x="85" y="220" width="32" height="110" fill="#B388EB"/>
+        <rect x="123" y="220" width="32" height="110" fill="#B388EB"/>
+        <!-- Cargo Pockets -->
+        <rect x="78" y="250" width="10" height="35" fill="#9B6FD6"/>
+        <rect x="152" y="250" width="10" height="35" fill="#9B6FD6"/>
+
+        <!-- Sneakers (Chunky Retro Pastel White & Yellow) -->
+        <rect x="75" y="330" width="42" height="30" fill="#FFFFFF"/>
+        <rect x="70" y="348" width="47" height="14" fill="#FFD166"/>
+        <rect x="123" y="330" width="42" height="30" fill="#FFFFFF"/>
+        <rect x="123" y="348" width="47" height="14" fill="#FFD166"/>
+
+        <!-- Pixel Musical Notes / Sparkles -->
+        <rect x="40" y="50" width="8" height="8" fill="#FFD166"/>
+        <rect x="190" y="60" width="8" height="8" fill="#F3AEC6"/>
+        <rect x="205" y="100" width="8" height="8" fill="#06D6A0"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Safe Zone Subtitle Card (38% safe zone) -->
+  <div class="safe-zone-card">
+    <div class="avatar-pixel">&#128131;</div>
+    <div class="safe-zone-text">
+      <div class="safe-zone-speaker">BAILAPP &bull; VOS Y TU RITMO</div>
+      <div class="safe-zone-phrase">"Encontrá las mejores academias de tu zona y reservá tu clase en segundos."</div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="cta-banner">
+    DESCARGÁ BAILAPP GRATIS EN APP STORE & GOOGLE PLAY
+  </div>
+
+</body>
+</html>

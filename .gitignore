@@ -1,0 +1,24 @@
+# Virtual environments & python caches
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# 3rd party tooling
+MoneyPrinterTurbo/
+
+# Node & package managers
+node_modules/
+npm-debug.log*
+
+# Render temporary segments and locks
+*.lock
+.*_segs-*
+.segs-*
+
+# OS files
+.DS_Store
+Thumbs.db

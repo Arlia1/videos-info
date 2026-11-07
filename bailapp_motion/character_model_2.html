@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: linear-gradient(180deg, #FFF5F8 0%, #FDEBF2 35%, #FBD4E3 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bg-panel {
+    position: absolute;
+    top: 150px;
+    width: 950px;
+    height: 1420px;
+    border-radius: 475px 475px 40px 40px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7FA 55%, rgba(254, 237, 244, 0.45) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 35px 80px rgba(224, 99, 133, 0.12);
+    z-index: 1;
+  }
+
+  .studio-sunbeam {
+    position: absolute;
+    top: 190px;
+    right: 70px;
+    width: 400px;
+    height: 650px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 245, 248, 0) 70%);
+    border-radius: 30px;
+    transform: rotate(6deg);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .header-badge {
+    position: absolute;
+    top: 100px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFFFFF;
+    padding: 16px 38px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(224, 99, 133, 0.15);
+    border: 2px solid #FAD2E1;
+    z-index: 10;
+  }
+  .header-badge .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #E06385;
+    box-shadow: 0 0 14px #E06385;
+  }
+  .header-badge span {
+    font-size: 24px;
+    font-weight: 800;
+    color: #3D2D3B;
+    letter-spacing: 0.6px;
+  }
+
+  /* LEFT SIDE FLOATING CARDS */
+  .cards-column {
+    position: absolute;
+    top: 250px;
+    left: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    z-index: 10;
+    width: 420px;
+  }
+
+  .floating-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 20px 26px;
+    box-shadow: 0 16px 36px rgba(216, 27, 96, 0.09);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 2px solid #FCE4EC;
+  }
+
+  .icon-bubble {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .icon-bubble.grey { background: #F5EBF0; color: #8C7A87; }
+  .icon-bubble.red { background: #FFEBEE; color: #E53935; }
+  .icon-bubble.pink { background: #FFE4EC; color: #E06385; }
+
+  .card-text .title {
+    font-size: 21px;
+    font-weight: 800;
+    color: #382E39;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .card-text .subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #9C8997;
+  }
+
+  /* CHARACTER STAGE */
+  .character-stage {
+    position: absolute;
+    bottom: 370px;
+    right: 50px;
+    width: 540px;
+    height: 1100px;
+    z-index: 6;
+  }
+
+  .subtitle-safezone {
+    position: absolute;
+    bottom: 240px;
+    width: 940px;
+    text-align: center;
+    z-index: 20;
+    padding: 24px 36px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 36px;
+    border: 2px solid #FAD2E1;
+    box-shadow: 0 22px 55px rgba(74, 62, 77, 0.08);
+  }
+
+  .subtitle-text {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: #2D242E;
+  }
+
+  .highlight-pink {
+    color: #C2185B;
+    background: #FCE4EC;
+    padding: 2px 14px;
+    border-radius: 14px;
+    display: inline-block;
+  }
+
+  .app-preview-bar {
+    position: absolute;
+    bottom: 80px;
+    width: 900px;
+    background: #2D242E;
+    color: #FFFFFF;
+    padding: 22px 38px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 20px 45px rgba(45, 36, 46, 0.22);
+  }
+  .app-preview-bar .logo-name {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-preview-bar .cta-pill {
+    background: #F8BBD0;
+    color: #880E4F;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 14px 32px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-panel"></div>
+  <div class="studio-sunbeam"></div>
+
+  <!-- Header Badge en español -->
+  <div class="header-badge">
+    <div class="dot"></div>
+    <span>LA REALIDAD DE BUSCAR CLASES</span>
+  </div>
+
+  <!-- Tarjetas flotantes a la izquierda -->
+  <div class="cards-column">
+    <div class="floating-card">
+      <div class="icon-bubble grey">💬</div>
+      <div class="card-text">
+        <div class="title">"¿Tienen cupos en Heels?"</div>
+        <div class="subtitle">Visto hace 3 días · Sin respuesta</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble red">⚠️</div>
+      <div class="card-text">
+        <div class="title">"Solo nivel profesional"</div>
+        <div class="subtitle">Vos querías nivel inicial...</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble pink">📍</div>
+      <div class="card-text">
+        <div class="title">A 2 horas de tu casa</div>
+        <div class="subtitle">Un martes a las 14:00 hs 🙃</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODELO 2: BAILARINA URBANA STREET DANCE (CABELLO ONDULADO SUELTO + CROP HOODIE OLIVA + JOGGING DINÁMICO) -->
+  <div class="character-stage">
+    <svg width="540" height="1100" viewBox="0 0 380 490" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="characterShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#C2185B" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+
+      <!-- Floor Contact Shadow -->
+      <ellipse cx="190" cy="460" rx="140" ry="16" fill="#E8BCC8" fill-opacity="0.5"/>
+
+      <!-- Rig Humaaans Modelo 2 -->
+      <g id="a-standing-human" transform="translate(190, 240) scale(-1, 1) translate(-190, -240) translate(40, 20)" filter="url(#characterShadow)">
+
+        <!-- 1. BOTTOM: JOGGING PANTS (Dynamic active dancer stance) -->
+        <g id="BOTTOM" transform="translate(0, 187)">
+          <polygon id="Leg-Back" fill="#DFB59A" points="130 0 204.31 124.23 260.01 229.25 272.01 229.25 178.67 0"/>
+
+          <!-- Back Sneaker -->
+          <g id="Shoe-Back" transform="translate(250, 199)" fill="#FFFFFF">
+            <path d="M2.68,25.4 C1.56,28.39 1,30.62 1,32.11 C1,33.91 1.3,36.54 1.9,40 C3.99,40 22.79,40 58.3,40 C59.77,35.15 58.92,32.54 55.76,32.15 C52.61,31.77 49.98,31.42 47.9,31.11 L21.68,19.42 C21.18,19.19 20.58,19.42 20.36,19.93 L18.66,24.04 C15.74,25.4 13.36,26.08 11.54,26.08 C10.05,26.08 8,25.48 5.38,24.29 C4.38,23.83 3.19,24.27 2.73,25.27 C2.71,25.31 2.69,25.36 2.68,25.4 Z" stroke="#D1C2CB" stroke-width="2"/>
+            <path d="M10 38 L55 38" stroke="#E06385" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- Back Pant Leg (Taupe / Sand dance pants) -->
+          <path id="Pant-Back" d="M244.54,212.43 L267.68,205.43 C257.54,175.12 245.12,141.77 230.41,105.37 C215.69,68.98 199.89,33.85 183,0 L117.64,0 C136.42,42.82 156.33,81.73 177.37,116.73 C198.4,151.72 220.79,183.62 244.54,212.43 Z" fill="#D3C5B4"/>
+
+          <!-- Front Leg -->
+          <path id="Leg-Front" d="M125.12,0 C118.1,43.65 104.58,99.43 103.3,101.15 C102.45,102.3 71.81,112.56 11.39,131.95 L13.98,142.53 C86.04,132.13 124,124.07 127.88,118.33 C133.7,109.73 162.75,41.76 174,0 L125.12,0 Z" fill="#F2C8B0"/>
+
+          <!-- Front Pant Leg -->
+          <path id="Pant-Front" d="M32.63,122.8 L37.19,139.84 C91.09,144.57 124.11,141.15 136.26,129.6 C148.41,118.04 162.25,74.84 177.8,0 L115.48,0 C105.63,61.28 100.12,93.21 98.96,95.78 C97.8,98.36 75.69,107.36 32.63,122.8 Z" fill="#E4D7C7" stroke="#BAAA98" stroke-width="2"/>
+
+          <!-- Front Sneaker -->
+          <g id="Shoe-Front" transform="translate(24.5, 154) rotate(80) translate(-24.5, -154) translate(-6, 134)" fill="#FFFFFF">
+            <path d="M2.68,25.4 C1.56,28.39 1,30.62 1,32.11 C1,33.91 1.3,36.54 1.9,40 C3.99,40 22.79,40 58.3,40 C59.77,35.15 58.92,32.54 55.76,32.15 C52.61,31.77 49.98,31.42 47.9,31.11 L21.68,19.42 C21.18,19.19 20.58,19.42 20.36,19.93 L18.66,24.04 C15.74,25.4 13.36,26.08 11.54,26.08 C10.05,26.08 8,25.48 5.38,24.29 C4.38,23.83 3.19,24.27 2.73,25.27 C2.71,25.31 2.69,25.36 2.68,25.4 Z" stroke="#D1C2CB" stroke-width="2"/>
+            <path d="M10 38 L55 38" stroke="#E06385" stroke-width="3" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- 2. TORSO: HOODIE / STREETWEAR CROP JACKET (Deep Olive Green / Urban Dancer Vibe) -->
+        <g id="TORSO" transform="translate(22, 82)">
+          <!-- Bare Skin Arms -->
+          <path id="Skin-Arms" d="M190.78,92.21 L222.68,115.64 C231.33,117.97 238.56,120.87 244.36,124.35 C245.73,125.6 247.39,128.13 241.71,127.69 C236.02,127.25 230.02,127.05 229.23,128.99 C228.45,130.93 231.89,133.25 230.3,135.86 C229.25,137.61 224.25,133.23 215.32,122.74 L183.73,109.64 L190.78,92.21 Z M68.31,93.02 L89.21,93.1 C76.3,134.76 69.34,156.86 68.31,159.41 C65.99,165.14 70.89,173.87 72.98,178.57 C66.16,181.62 66.89,170.32 58.29,174.32 C50.44,177.97 44.46,184.59 35.39,178.99 C34.27,178.31 33.05,175.71 36,173.69 C43.36,168.64 53.97,159.81 55.4,156.91 C57.35,152.94 61.65,131.65 68.31,93.02 Z" fill="#F2C8B0"/>
+
+          <!-- Coat Back in Olive Green -->
+          <path id="Coat-Back" d="M122.73,9.58 L131.22,7.35 C165.59,32.16 183.36,84.06 225,108.73 L216.59,121.24 C147.89,118.77 125.38,55.55 122.73,9.58 Z" fill="#2E3A2E" transform="translate(173.86, 64.29) rotate(5) translate(-173.86, -64.29)"/>
+
+          <!-- White Fitted Inner Tee -->
+          <path id="Shirt-Inner" d="M90,114 C124.67,114 150.18,114 166.51,114 C170.01,114 169.35,108.95 168.84,106.4 C163.01,77 140.24,45.31 140.24,3.46 L118.17,0 C99.92,29.36 93.6,65.5 90,114 Z" fill="#FFFFFF"/>
+
+          <!-- Coat Front in Urban Olive -->
+          <path id="Coat-Front" d="M90.61,28.86 C87.41,27.94 84.87,25.79 83,22.41 C74.93,7.86 77.85,-0.16 86.47,-2.79 C95.09,-5.43 102.78,0 116.51,0 C117.26,0 117.94,0.05 118.56,0.14 L125.47,0.53 C145.29,67.72 150.76,112.54 141.87,135 L81.65,135 C78.08,143.32 74.67,150.32 71.41,156 L55,156 C53.46,106.07 65.33,63.69 90.61,28.86 Z" fill="#3D4B3D"/>
+          <path id="Coat-Shade" d="M94.77,100.5 C96.66,116.34 99.74,127.84 104,135 L81.65,135 C85.81,125.3 90.18,113.79 94.77,100.5 Z" fillOpacity="0.15" fill="#000000"/>
+
+          <!-- Floating Smartphone in hand -->
+          <g id="Hand-Phone" transform="translate(230, 95) scale(0.65)">
+            <rect x="0" y="0" width="45" height="75" rx="8" fill="#1C1820" stroke="#FFFFFF" stroke-width="2"/>
+            <rect x="4" y="5" width="37" height="63" rx="5" fill="#FFF0F5"/>
+            <rect x="16" y="8" width="14" height="3" rx="1.5" fill="#1C1820"/>
+            <rect x="8" y="18" width="22" height="5" rx="2" fill="#F48FB1"/>
+            <rect x="14" y="27" width="23" height="5" rx="2" fill="#E06385"/>
+            <rect x="8" y="36" width="25" height="5" rx="2" fill="#F48FB1"/>
+          </g>
+        </g>
+
+        <!-- 3. HEAD: WAVY FLOWING HAIR (NO PONYTAIL) -->
+        <g id="HEAD" transform="translate(82, 0)">
+          <!-- Head Base & Skin -->
+          <g id="Head-Skin" transform="translate(54, 31)" fill="#F2C8B0">
+            <path d="M8.26,34.49 C3.65,29.08 0.54,22.45 1.06,15.03 C2.56,-6.38 32.35,-1.67 38.14,9.13 C43.94,19.94 43.25,47.33 35.76,49.26 C32.77,50.03 26.41,48.15 19.94,44.24 L24,73 L0,73 L8.26,34.49 Z"/>
+            <circle cx="28" cy="40" r="3" fill="#E06385"/>
+          </g>
+
+          <!-- Beautiful Wavy Loose Hair (Rich Dark Brunette) -->
+          <path id="Hair-Wavy" d="M94.41,44.98 C94.17,43.58 93.59,42.03 93.12,40.7 C92.52,39 91.6,37.46 90.6,36.01 C88.7,33.27 86.43,30.81 83.92,28.76 C79.33,25.02 73.5,22.86 67.76,23.56 C64.86,23.92 62.05,25.02 59.65,26.86 C57.49,28.52 55.41,30.97 52.61,31.15 C49.56,31.34 46.77,28.65 44.32,26.99 C41.57,25.11 38.63,23.75 35.41,23.22 C30.02,22.33 24.95,24.15 21.23,28.58 C17.27,33.29 14.4,40.2 16.99,46.44 C17.48,47.6 18.1,48.58 18.99,49.39 C19.81,50.14 21.06,50.93 21.39,52.11 C21.74,53.38 20.69,55.01 20.28,56.15 C19.7,57.78 19.22,59.49 19.39,61.27 C19.67,64.18 21.5,66.96 23.43,68.88 C25.4,70.83 27.82,71.94 30.41,72.46 C32.14,72.8 33.9,72.99 35.66,72.86 C36.53,72.8 37.3,72.56 38.14,72.36 C38.96,72.18 39.42,72.39 40.12,72.85 C43.35,74.94 46.83,75.75 50.57,75.44 C53.72,75.17 57.36,74.41 59.93,72.25 C62.79,69.85 62.73,66.54 62.06,63 C62.77,63.36 64.74,63.58 63.56,62.17 C63.1,61.61 62.22,61.38 61.62,61.06 C60.92,60.67 60.21,60.18 59.67,59.56 C57.49,57.05 59.69,51.93 62.44,51.09 C66.52,49.83 67.43,55.61 70.35,57.1 C72.02,57.96 73.77,56.78 75.03,55.59 C76.71,53.98 77.86,51.86 78.84,49.69 C79.66,47.91 80.42,46.1 81.25,44.33 C81.64,43.5 82.98,41.16 82.3,40.23 C85.23,39.64 88.48,40.86 91,42.45 C92.04,43.11 92.83,43.84 93.39,45 C93.51,45.25 93.76,45.99 94.09,46.02 C94.69,46.07 94.47,45.34 94.41,44.98" fill="#281A14"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Subtítulo en Safe Zone (38% desde la base) -->
+  <div class="subtitle-safezone">
+    <div class="subtitle-text">
+      ¿Cansada de mandar <span class="highlight-pink">10 DMs</span> y que nadie conteste?
+    </div>
+  </div>
+
+  <!-- Barra inferior con 'Bailapp' todo junto -->
+  <div class="app-preview-bar">
+    <div class="logo-name">
+      🩰 Bailapp
+    </div>
+    <div class="cta-pill">RESERVÁ TU CLASE YA</div>
+  </div>
+
+</body>
+</html>

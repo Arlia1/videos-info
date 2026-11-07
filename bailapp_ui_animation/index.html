@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bailapp — Animación de Interfaz Publicitaria</title>
+  
+  <!-- GSAP Local -->
+  <script src="gsap.min.js"></script>
+
+  <style>
+    @media (min-width: 1080px) and (min-height: 1920px) {
+      * {
+        animation: none !important;
+      }
+      #controls-bar {
+        display: none !important;
+      }
+      body {
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #stage-container {
+        transform: none !important;
+        left: 0 !important;
+        top: 0 !important;
+      }
+    }
+    :root {
+      --primary: #E85D8A;
+      --primary-dark: #C23867;
+      --primary-soft: #FAD2E1;
+      --primary-light: #FFF1F5;
+      --accent: #E06385;
+      --bg-cream: #FFF9F5;
+      --text-dark: #2D2A2E;
+      --text-muted: #7E747C;
+      --card-bg: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: #181519;
+      color: var(--text-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Contenedor Exterior con Escala Responsiva */
+    #stage-container {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      transform-origin: center center;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      background: linear-gradient(175deg, #FFF6F9 0%, #FDEBF2 40%, #FBD4E3 100%);
+    }
+
+    /* Luces de fondo (Aesthetic Mesh Gradients) */
+    .ambient-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      opacity: 0.65;
+    }
+    .glow-1 {
+      top: -150px;
+      left: -100px;
+      width: 700px;
+      height: 700px;
+      background: #FFD5E5;
+    }
+    .glow-2 {
+      bottom: -100px;
+      right: -100px;
+      width: 800px;
+      height: 800px;
+      background: #FFCAD4;
+    }
+    .glow-3 {
+      top: 40%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: #FFE5EC;
+    }
+
+    /* Arco arquitectónico de fondo */
+    .bg-arch {
+      position: absolute;
+      top: 100px;
+      left: 65px;
+      width: 950px;
+      height: 1720px;
+      border-radius: 475px 475px 80px 80px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 247, 250, 0.75) 60%, rgba(253, 235, 242, 0.4) 100%);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 30px 80px rgba(232, 93, 138, 0.12);
+      pointer-events: none;
+    }
+
+    /* Header superior del video */
+    .top-badge-bar {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 50;
+    }
+    .brand-pill {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 16px 36px;
+      border-radius: 100px;
+      border: 2px solid var(--primary-soft);
+      box-shadow: 0 12px 32px rgba(224, 99, 133, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-pill .sparkle {
+      font-size: 24px;
+      animation: pulseSparkle 2s infinite ease-in-out;
+    }
+    .brand-pill .pill-text {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: 0.5px;
+    }
+    .brand-pill .pill-text span {
+      color: var(--primary);
+    }
+
+    /* Main Hook Text (Cambia según la fase) */
+    .hook-banner {
+      position: absolute;
+      top: 170px;
+      left: 80px;
+      right: 80px;
+      text-align: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .hook-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 50px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-dark);
+      text-shadow: 0 4px 16px rgba(255, 255, 255, 0.8);
+    }
+    .hook-title em {
+      font-style: italic;
+      color: var(--primary);
+      background: linear-gradient(120deg, var(--primary) 0%, #D81B60 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hook-subtitle {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* ========================================================
+       DISPOSITIVO MÓVIL (iPhone 16 Pro Mockup Ultra-Fidelity)
+       ======================================================== */
+    .phone-perspective-stage {
+      position: absolute;
+      top: 290px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 720px;
+      height: 1400px;
+      perspective: 1600px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      z-index: 30;
+    }
+
+    .phone-device {
+      position: relative;
+      width: 580px;
+      height: 1180px;
+      background: #111;
+      border-radius: 72px;
+      padding: 14px;
+      box-shadow: 
+        0 50px 100px -20px rgba(74, 30, 48, 0.35),
+        0 25px 50px -10px rgba(0, 0, 0, 0.25),
+        inset 0 0 0 3px #555,
+        inset 0 0 0 5px #2A2A2A;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* Brillo de titanio en el borde */
+    .phone-device::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 74px;
+      padding: 2px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(232,93,138,0.3) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Botones laterales del iPhone */
+    .phone-btn-power {
+      position: absolute;
+      right: -8px;
+      top: 240px;
+      width: 6px;
+      height: 100px;
+      background: #333;
+      border-radius: 0 4px 4px 0;
+    }
+    .phone-btn-vol-up {
+      position: absolute;
+      left: -8px;
+      top: 210px;
+      width: 6px;
+      height: 65px;
+      background: #333;
+      border-radius: 4px 0 0 4px;
+    }
+    .phone-btn-vol-down {
+      position: absolute;
+      left: -8px;
+      top: 290px;
+      width: 6px;
+      height: 65px;
+      background: #333;
+      border-radius: 4px 0 0 4px;
+    }
+
+    /* Pantalla OLED */
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      border-radius: 58px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 38px;
+      background: #000000;
+      border-radius: 24px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .island-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #111;
+      border: 1px solid #222;
+    }
+    .island-pill-active {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #FFF;
+      font-weight: 600;
+      opacity: 0;
+    }
+    .island-icon {
+      color: var(--primary);
+    }
+
+    /* Barra de Estado (9:41, WiFi, Batería) */
+    .status-bar {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #000;
+      z-index: 90;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    /* ========================================================
+       INTERFAZ REAL DE BAILAPP (Clon fiel de la Web)
+       ======================================================== */
+    .app-viewport {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      background: #FAF8F9;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* App Header de Bailapp */
+    .app-header {
+      background: #FFFFFF;
+      padding: 14px 24px 16px;
+      border-bottom: 1px solid #F1E5EB;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      z-index: 20;
+    }
+    .app-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .app-logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #E85D8A 0%, #D81B60 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      font-size: 20px;
+      box-shadow: 0 6px 14px rgba(232, 93, 138, 0.35);
+    }
+    .app-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #2D2A2E;
+      letter-spacing: -0.3px;
+    }
+    .app-location-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF1F5;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Barra de Búsqueda Interactiva */
+    .app-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #F5EEF2;
+      border-radius: 16px;
+      padding: 12px 18px;
+      gap: 12px;
+      border: 1.5px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .search-icon {
+      font-size: 17px;
+      color: #8C7A87;
+    }
+    .search-placeholder {
+      font-size: 15px;
+      font-weight: 600;
+      color: #8C7A87;
+      display: flex;
+      align-items: center;
+    }
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      background: var(--primary);
+      margin-left: 2px;
+      opacity: 0;
+    }
+
+    /* Chips de Estilos (Categorías) */
+    .styles-scroll {
+      display: flex;
+      gap: 10px;
+      padding: 14px 24px;
+      background: #FFFFFF;
+      overflow-x: hidden;
+      white-space: nowrap;
+      border-bottom: 1px solid #F4E8EE;
+    }
+    .style-chip {
+      padding: 9px 18px;
+      border-radius: 100px;
+      background: #F7EFF3;
+      font-size: 14px;
+      font-weight: 700;
+      color: #554852;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+    .style-chip.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(232, 93, 138, 0.4);
+    }
+
+    /* Contenido de la Pantalla (Scrollable) */
+    .app-content {
+      flex: 1;
+      padding: 18px 24px 100px;
+      overflow-y: hidden;
+      position: relative;
+    }
+
+    .section-headline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .section-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #FFF0F5;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    /* Tarjetas de Clases / Estudios */
+    .class-card {
+      background: #FFFFFF;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1.5px solid #F3E6ED;
+      box-shadow: 0 8px 22px rgba(74, 30, 48, 0.05);
+      position: relative;
+      cursor: pointer;
+      transform-origin: center;
+      will-change: transform, box-shadow;
+    }
+    .class-card.highlight {
+      border-color: #F8C8DC;
+      box-shadow: 0 12px 30px rgba(232, 93, 138, 0.15);
+    }
+
+    .card-top {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .card-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #FDE2E4 0%, #FFCAD4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-info {
+      flex: 1;
+    }
+    .card-studio-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-class-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+    .card-teacher {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .spec-tag {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: #F7EFF3;
+      color: #63525E;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .spec-tag.green {
+      background: #E8F8F0;
+      color: #0E8558;
+    }
+    .spec-tag.alert {
+      background: #FFF1F0;
+      color: #D32F2F;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid #F7EDF2;
+    }
+    .card-price {
+      display: flex;
+      flex-direction: column;
+    }
+    .price-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .price-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .btn-reserve-quick {
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      box-shadow: 0 4px 12px rgba(232, 93, 138, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Modal / Bottom Sheet de Reserva Confirmada */
+    .booking-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -600px;
+      background: #FFFFFF;
+      border-radius: 36px 36px 0 0;
+      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.25);
+      padding: 24px 28px 40px;
+      z-index: 80;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .sheet-handle {
+      width: 48px;
+      height: 5px;
+      background: #E0D3DA;
+      border-radius: 10px;
+      align-self: center;
+      margin-bottom: 8px;
+    }
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sheet-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .sheet-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F5EEF2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #665;
+    }
+    
+    .pass-details-box {
+      background: #FFF6F9;
+      border: 1.5px dashed var(--primary-soft);
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pass-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      color: #63525E;
+    }
+    .pass-row strong {
+      color: var(--text-dark);
+      font-weight: 800;
+    }
+
+    .btn-action-checkout {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #E85D8A 0%, #D81B60 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      box-shadow: 0 10px 24px rgba(232, 93, 138, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Vista de Éxito con QR */
+    .success-overlay {
+      position: absolute;
+      inset: 0;
+      background: #FFFFFF;
+      z-index: 95;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 30px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .success-icon-badge {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #E8F8F0;
+      color: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      margin-bottom: 20px;
+      box-shadow: 0 14px 30px rgba(16, 185, 129, 0.25);
+    }
+    .success-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .success-subtitle {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .qr-card-container {
+      background: #FAF5F8;
+      padding: 20px;
+      border-radius: 24px;
+      border: 2px solid #F5E1EC;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 80%;
+    }
+    .qr-box {
+      width: 140px;
+      height: 140px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-code-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .qr-pass-code {
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 2px;
+    }
+
+    /* Bottom Navigation Bar */
+    .app-bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 78px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid #F1E5EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px 10px;
+      z-index: 30;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #9C8997;
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    /* Home Bar (iOS indicator) */
+    .ios-home-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: #2D2A2E;
+      border-radius: 10px;
+      z-index: 100;
+    }
+
+    /* Cursor Táctil / Indicador de Toque */
+    .touch-pointer {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(232, 93, 138, 0.4);
+      border: 3px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 20px rgba(232, 93, 138, 0.6);
+      pointer-events: none;
+      z-index: 110;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+    }
+    .touch-ripple {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      opacity: 0;
+    }
+
+    /* ========================================================
+       NOTIFICACIONES FLOTANTES (Problema vs Solución)
+       ======================================================== */
+    .floating-notifications-layer {
+      position: absolute;
+      top: 360px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      z-index: 150;
+      pointer-events: none;
+    }
+    .notif-card {
+      width: 650px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      padding: 22px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.16);
+      border: 2px solid #F5E1EC;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      transform: translateY(-40px) scale(0.95);
+    }
+    .notif-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #FFEAEA;
+      color: #E53935;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .notif-body {
+      flex: 1;
+    }
+    .notif-title-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .notif-sender {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .notif-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: #9C8997;
+    }
+    .notif-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #554852;
+      line-height: 1.3;
+    }
+    .notif-badge-status {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #D32F2F;
+      background: #FFEBEE;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    /* ========================================================
+       OUTRO / PANTALLA FINAL PUBLICITARIA
+       ======================================================== */
+    .outro-layer {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 246, 249, 0.94);
+      backdrop-filter: blur(25px);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 70px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .outro-logo-box {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .outro-logo-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #E85D8A 0%, #D81B60 100%);
+      color: #FFF;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 36px rgba(232, 93, 138, 0.4);
+    }
+    .outro-brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .outro-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+      max-width: 800px;
+    }
+    .outro-tagline span {
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    /* 3 Tarjetas de Beneficios en el Outro */
+    .outro-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+    .benefit-item {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 10px 30px rgba(74, 30, 48, 0.08);
+      border: 1.5px solid #F5E1EC;
+      text-align: left;
+    }
+    .benefit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #FFF0F5;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .benefit-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .benefit-desc {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Botón CTA Grande */
+    .outro-cta-btn {
+      background: linear-gradient(135deg, #E85D8A 0%, #D81B60 100%);
+      color: #FFFFFF;
+      padding: 24px 60px;
+      border-radius: 100px;
+      font-size: 26px;
+      font-weight: 800;
+      border: none;
+      box-shadow: 0 18px 45px rgba(232, 93, 138, 0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      animation: ctaPulse 2s infinite ease-in-out;
+    }
+    .outro-url-badge {
+      font-size: 20px;
+      font-weight: 700;
+      color: #554852;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px 28px;
+      border-radius: 100px;
+      border: 1px solid var(--primary-soft);
+    }
+
+    /* Subtitle Safe Zone Badge (TikTok / Reels Safe Zone ~38% from bottom) */
+    .caption-safezone {
+      position: absolute;
+      bottom: 220px;
+      left: 70px;
+      right: 70px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 20px 30px;
+      border-radius: 30px;
+      border: 2px solid var(--primary-soft);
+      box-shadow: 0 16px 45px rgba(224, 99, 133, 0.15);
+      text-align: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .caption-text {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+    }
+    .caption-text mark {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    /* ========================================================
+       BARRA DE CONTROLES DE REPRODUCCIÓN (Debajo del stage)
+       ======================================================== */
+    #controls-bar {
+      margin-top: 18px;
+      background: #252228;
+      padding: 14px 28px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #FFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+    .ctrl-btn {
+      background: #3B3640;
+      color: #FFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .ctrl-btn:hover {
+      background: var(--primary);
+    }
+    .ctrl-btn.active {
+      background: var(--primary);
+    }
+    #time-slider {
+      width: 320px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    #time-display {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #BBB;
+    }
+
+    @keyframes pulseSparkle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.2) rotate(15deg); }
+    }
+    @keyframes ctaPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STAGE 1080x1920 (Formato Vertical 9:16) -->
+  <div id="stage-container">
+    
+    <!-- Luces Ambientales -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <!-- Arco Arquitectónico de Fondo -->
+    <div class="bg-arch"></div>
+
+    <!-- Header Superior -->
+    <div class="top-badge-bar">
+      <div class="brand-pill">
+        <span class="sparkle">✨</span>
+        <div class="pill-text">Bailapp • <span>Buenos Aires</span></div>
+      </div>
+    </div>
+
+    <!-- Titular Dinámico Superior -->
+    <div class="hook-banner">
+      <h1 class="hook-title" id="main-headline">
+        ¿Buscás clase de <em>danza</em> en CABA?
+      </h1>
+      <p class="hook-subtitle" id="main-subheadline">
+        Olvidate de esperar DMs. Encontrá tu estudio y reservá con 1 toque.
+      </p>
+    </div>
+
+    <!-- Capa de Notificaciones Flotantes (Problema de los DMs) -->
+    <div class="floating-notifications-layer">
+      <div class="notif-card" id="pain-notification">
+        <div class="notif-avatar">💬</div>
+        <div class="notif-body">
+          <div class="notif-title-row">
+            <span class="notif-sender">Estudio de Danza (Instagram DM)</span>
+            <span class="notif-time">hace 2 días</span>
+          </div>
+          <div class="notif-text">«Hola! ¿Te quedan cupos para la clase de Heels de hoy a las 19:30hs?»</div>
+          <div class="notif-badge-status">💀 Clavado el visto • Sin cupos confirmados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escenario 3D con Dispositivo Móvil -->
+    <div class="phone-perspective-stage">
+      <div class="phone-device" id="phone">
+        
+        <!-- Botones Laterales -->
+        <div class="phone-btn-power"></div>
+        <div class="phone-btn-vol-up"></div>
+        <div class="phone-btn-vol-down"></div>
+
+        <!-- Pantalla del Teléfono -->
+        <div class="phone-screen">
+          
+          <!-- Dynamic Island -->
+          <div class="dynamic-island" id="dynamic-island">
+            <div class="island-dot"></div>
+            <div class="island-pill-active" id="island-active">
+              <span class="island-icon">🩰</span>
+              <span>Bailapp Live</span>
+            </div>
+          </div>
+
+          <!-- Barra de Estado -->
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <span>5G</span>
+              <span>100% 🔋</span>
+            </div>
+          </div>
+
+          <!-- App Viewport -->
+          <div class="app-viewport">
+            
+            <!-- App Header -->
+            <div class="app-header">
+              <div class="app-header-top">
+                <div class="app-brand">
+                  <div class="app-logo-mark">🩰</div>
+                  <div class="app-logo-text">Bailapp</div>
+                </div>
+                <div class="app-location-tag">
+                  📍 Buenos Aires, CABA
+                </div>
+              </div>
+
+              <!-- Barra de Búsqueda -->
+              <div class="app-search-box" id="search-box">
+                <span class="search-icon">🔍</span>
+                <div class="search-placeholder">
+                  <span id="search-text">Explorar estudios y clases...</span>
+                  <span class="typing-cursor" id="search-cursor"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chips de Estilos -->
+            <div class="styles-scroll" id="styles-scroll">
+              <div class="style-chip" id="chip-todos">✨ Todos</div>
+              <div class="style-chip" id="chip-urbano">🧢 Danza Urbana</div>
+              <div class="style-chip" id="chip-reggaeton">🔥 Reggaetón</div>
+              <div class="style-chip" id="chip-heels">👠 Heels & Femme</div>
+              <div class="style-chip" id="chip-contempo">🩰 Contemporáneo</div>
+              <div class="style-chip" id="chip-kpop">⚡ K-Pop</div>
+            </div>
+
+            <!-- Feed de Contenido -->
+            <div class="app-content" id="app-content">
+              <div class="section-headline">
+                <span class="section-title">Estudios Recomendados</span>
+                <span class="section-badge">🟢 Cupos en vivo</span>
+              </div>
+
+              <!-- Tarjeta 1: Studio Flow Palermo -->
+              <div class="class-card highlight" id="card-studio-flow">
+                <div class="card-top">
+                  <div class="card-thumb">👠</div>
+                  <div class="card-info">
+                    <div class="card-studio-name">
+                      Studio Flow • Palermo Soho ⭐ 4.9
+                    </div>
+                    <div class="card-class-title">Heels Principiante & Femme</div>
+                    <div class="card-teacher">Profe Sofi Valenzuela • Jueves 19:30hs</div>
+                  </div>
+                </div>
+
+                <div class="card-tags">
+                  <span class="spec-tag green">🪵 Piso técnico amortiguado</span>
+                  <span class="spec-tag">❄️ Climatizado</span>
+                  <span class="spec-tag alert">⚡ Últimos 3 cupos</span>
+                </div>
+
+                <div class="card-footer">
+                  <div class="card-price">
+                    <span class="price-label">Pase por clase</span>
+                    <span class="price-value">$8.500 ARS</span>
+                  </div>
+                  <button class="btn-reserve-quick" id="btn-quick-reserve">
+                    Reservar ➜
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tarjeta 2: Urban Beats Colegiales -->
+              <div class="class-card" id="card-urban-beats">
+                <div class="card-top">
+                  <div class="card-thumb">🧢</div>
+                  <div class="card-info">
+                    <div class="card-studio-name">
+                      Urban Beats • Colegiales ⭐ 4.8
+                    </div>
+                    <div class="card-class-title">Reggaetón & Street Groove</div>
+                    <div class="card-teacher">Profe Nico Ruiz • Viernes 20:00hs</div>
+                  </div>
+                </div>
+
+                <div class="card-tags">
+                  <span class="spec-tag green">🔊 Audio Hi-Fi</span>
+                  <span class="spec-tag">🪵 Piso de madera</span>
+                  <span class="spec-tag">Disponible</span>
+                </div>
+
+                <div class="card-footer">
+                  <div class="card-price">
+                    <span class="price-label">Pase por clase</span>
+                    <span class="price-value">$8.000 ARS</span>
+                  </div>
+                  <button class="btn-reserve-quick" style="background:#554852;">
+                    Ver Sala
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Modal Bottom Sheet de Reserva -->
+            <div class="booking-sheet" id="booking-sheet">
+              <div class="sheet-handle"></div>
+              <div class="sheet-header">
+                <div class="sheet-title">Confirmar Reserva de Pase</div>
+                <div class="sheet-close">✕</div>
+              </div>
+
+              <div class="pass-details-box">
+                <div class="pass-row">
+                  <span>Estudio:</span>
+                  <strong>Studio Flow (Palermo)</strong>
+                </div>
+                <div class="pass-row">
+                  <span>Clase:</span>
+                  <strong>Heels Principiante</strong>
+                </div>
+                <div class="pass-row">
+                  <span>Horario:</span>
+                  <strong>Jueves 19:30 hs (60 min)</strong>
+                </div>
+                <div class="pass-row">
+                  <span>Sala:</span>
+                  <strong>Salón 1 • Piso amortiguado</strong>
+                </div>
+                <div class="pass-row" style="border-top:1px solid #F5E1EC; padding-top:8px;">
+                  <span>Total a abonar:</span>
+                  <strong style="color:var(--primary); font-size:18px;">$8.500 ARS</strong>
+                </div>
+              </div>
+
+              <button class="btn-action-checkout" id="btn-confirm-checkout">
+                <span>RESERVAR EN 1 CLIC</span>
+                <span>⚡</span>
+              </button>
+            </div>
+
+            <!-- Pantalla de Éxito / QR -->
+            <div class="success-overlay" id="success-overlay">
+              <div class="success-icon-badge">✓</div>
+              <h2 class="success-title">¡Pase Confirmado! 🎉</h2>
+              <p class="success-subtitle">Tu lugar en Studio Flow está 100% asegurado.</p>
+
+              <div class="qr-card-container">
+                <div class="qr-box">
+                  <!-- SVG Real de Código QR estilizado -->
+                  <svg class="qr-code-svg" viewBox="0 0 100 100" fill="none">
+                    <!-- Esquinas de posicionamiento QR -->
+                    <rect x="5" y="5" width="28" height="28" rx="6" fill="#2D2A2E" />
+                    <rect x="9" y="9" width="20" height="20" rx="3" fill="#FFF" />
+                    <rect x="13" y="13" width="12" height="12" rx="2" fill="#E85D8A" />
+
+                    <rect x="67" y="5" width="28" height="28" rx="6" fill="#2D2A2E" />
+                    <rect x="71" y="9" width="20" height="20" rx="3" fill="#FFF" />
+                    <rect x="75" y="13" width="12" height="12" rx="2" fill="#E85D8A" />
+
+                    <rect x="5" y="67" width="28" height="28" rx="6" fill="#2D2A2E" />
+                    <rect x="9" y="71" width="20" height="20" rx="3" fill="#FFF" />
+                    <rect x="13" y="75" width="12" height="12" rx="2" fill="#E85D8A" />
+
+                    <!-- Puntos de datos simulados -->
+                    <rect x="38" y="10" width="8" height="8" rx="2" fill="#2D2A2E" />
+                    <rect x="50" y="14" width="8" height="8" rx="2" fill="#E85D8A" />
+                    <rect x="38" y="26" width="8" height="8" rx="2" fill="#2D2A2E" />
+                    <rect x="10" y="38" width="8" height="8" rx="2" fill="#E85D8A" />
+                    <rect x="22" y="44" width="8" height="8" rx="2" fill="#2D2A2E" />
+                    <rect x="38" y="40" width="14" height="14" rx="3" fill="#2D2A2E" />
+                    <rect x="56" y="38" width="8" height="8" rx="2" fill="#E85D8A" />
+                    <rect x="70" y="42" width="10" height="10" rx="2" fill="#2D2A2E" />
+                    <rect x="85" y="50" width="8" height="8" rx="2" fill="#E85D8A" />
+                    <rect x="42" y="62" width="10" height="10" rx="2" fill="#E85D8A" />
+                    <rect x="58" y="68" width="12" height="8" rx="2" fill="#2D2A2E" />
+                    <rect x="76" y="66" width="14" height="14" rx="3" fill="#2D2A2E" />
+                    <rect x="46" y="80" width="8" height="12" rx="2" fill="#2D2A2E" />
+                    <rect x="62" y="82" width="10" height="8" rx="2" fill="#E85D8A" />
+                  </svg>
+                </div>
+                <div class="qr-pass-code">PASE #BL-8942</div>
+                <div style="font-size:13px; font-weight:700; color:#554852;">Presentalo al ingresar al estudio</div>
+              </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="app-bottom-nav">
+              <div class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>Explorar</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">📅</span>
+                <span>Clases</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <span>Mapa</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">🩰</span>
+                <span>Feed</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Mi Perfil</span>
+              </div>
+            </div>
+
+            <!-- Indicador Home iOS -->
+            <div class="ios-home-bar"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cursor Táctil Animado -->
+    <div class="touch-pointer" id="touch-pointer">
+      <div class="touch-ripple"></div>
+    </div>
+
+    <!-- Subtitle Safe Zone Badge (TikTok / Reels Safe Zone) -->
+    <div class="caption-safezone" id="caption-safezone">
+      <div class="caption-text" id="caption-text">
+        Buscá tu estilo favorito en <mark>Buenos Aires</mark>
+      </div>
+    </div>
+
+    <!-- Capa de Cierre / Outro Publicitario -->
+    <div class="outro-layer" id="outro-layer">
+      <div class="outro-logo-box">
+        <div class="outro-logo-icon">🩰</div>
+        <div class="outro-brand-title">Bailapp</div>
+      </div>
+
+      <h2 class="outro-tagline">
+        El ritmo que buscás, los <span>estudios</span> que te mueven.
+      </h2>
+
+      <div class="outro-benefits">
+        <div class="benefit-item">
+          <div class="benefit-icon">⚡</div>
+          <div>
+            <div class="benefit-title">Reserva inmediata sin DMs</div>
+            <div class="benefit-desc">Cupos actualizados en tiempo real y confirmación en 1 toque.</div>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-icon">🪵</div>
+          <div>
+            <div class="benefit-title">Salas con piso técnico</div>
+            <div class="benefit-desc">Entrená seguro en espacios con piso flotante amortiguado.</div>
+          </div>
+        </div>
+
+        <div class="benefit-item">
+          <div class="benefit-icon">📍</div>
+          <div>
+            <div class="benefit-title">Estudios verificados de CABA</div>
+            <div class="benefit-desc">Palermo, Almagro, Colegiales, Belgrano y más.</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="outro-cta-btn" id="outro-cta-btn">
+        <span>PROBALO AHORA</span>
+        <span>➜</span>
+      </button>
+
+      <div class="outro-url-badge">
+        🌐 bailapp-prueba.vercel.app
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Barra de Controles Inferior para Play/Pause y Scrubbing -->
+  <div id="controls-bar">
+    <button class="ctrl-btn" id="btn-play">⏸ Pausar</button>
+    <button class="ctrl-btn" id="btn-restart">↺ Reiniciar</button>
+    <input type="range" id="time-slider" min="0" max="17" step="0.05" value="0" />
+    <span id="time-display">00:00 / 00:17</span>
+    <button class="ctrl-btn" id="btn-speed">1.0x</button>
+    <button class="ctrl-btn active" id="btn-sound">🔊 Sonido ON</button>
+  </div>
+
+  <!-- SCRIPT DE ANIMACIÓN GSAP Y SONIDO SINTÉTICO -->
+  <script>
+    // 1. Escala Responsiva del Stage
+    function updateResponsiveScale() {
+      const stage = document.getElementById('stage-container');
+      const winW = window.innerWidth;
+      const winH = window.innerHeight;
+      if (winW >= 1080 && winH >= 1920) {
+        stage.style.transform = 'scale(1)';
+        return;
+      }
+      const scale = Math.min(winW / 1080, (winH - 80) / 1920, 0.48);
+      stage.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener('resize', updateResponsiveScale);
+    updateResponsiveScale();
+
+    // 2. Audio Sintético con Web Audio API (Sin depender de archivos externos)
+    const AudioEngine = {
+      ctx: null,
+      enabled: true,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+      },
+      playPop() {
+        if (!this.enabled || !this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.08);
+      },
+      playWhoosh() {
+        if (!this.enabled || !this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + 0.22);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.22);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.22);
+      },
+      playSuccessChime() {
+        if (!this.enabled || !this.ctx) return;
+        const freqs = [523.25, 659.25, 783.99, 1046.50]; // Acorde C mayor
+        freqs.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (idx * 0.06));
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime + (idx * 0.06));
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + (idx * 0.06) + 0.6);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + (idx * 0.06));
+          osc.stop(this.ctx.currentTime + (idx * 0.06) + 0.6);
+        });
+      }
+    };
+
+    // 3. Animación Maestra con GSAP Timeline (Duración Total: 17 Segundos)
+    const masterTimeline = gsap.timeline({
+      paused: false,
+      repeat: -1,
+      onUpdate: updateSliderProgress
+    });
+
+    const phone = document.getElementById('phone');
+    const painNotif = document.getElementById('pain-notification');
+    const touchPointer = document.getElementById('touch-pointer');
+    const searchBox = document.getElementById('search-box');
+    const searchText = document.getElementById('search-text');
+    const searchCursor = document.getElementById('search-cursor');
+    const chipHeels = document.getElementById('chip-heels');
+    const stylesScroll = document.getElementById('styles-scroll');
+    const cardStudioFlow = document.getElementById('card-studio-flow');
+    const cardUrbanBeats = document.getElementById('card-urban-beats');
+    const bookingSheet = document.getElementById('booking-sheet');
+    const btnConfirmCheckout = document.getElementById('btn-confirm-checkout');
+    const successOverlay = document.getElementById('success-overlay');
+    const outroLayer = document.getElementById('outro-layer');
+    const captionText = document.getElementById('caption-text');
+    const dynamicIsland = document.getElementById('dynamic-island');
+    const islandActive = document.getElementById('island-active');
+
+    // Helper para mover el cursor táctil
+    function movePointerTo(targetEl, duration, delay = 0) {
+      const rect = targetEl.getBoundingClientRect();
+      const stageRect = document.getElementById('stage-container').getBoundingClientRect();
+      const scale = stageRect.width / 1080;
+      
+      const x = (rect.left - stageRect.left + (rect.width / 2)) / scale;
+      const y = (rect.top - stageRect.top + (rect.height / 2)) / scale;
+
+      return masterTimeline.to(touchPointer, {
+        x: x,
+        y: y,
+        opacity: 1,
+        scale: 1,
+        duration: duration,
+        ease: "power2.out"
+      }, delay);
+    }
+
+    function tapPointer(delay = "+=0") {
+      masterTimeline.to(touchPointer, {
+        scale: 0.75,
+        duration: 0.12,
+        yoyo: true,
+        repeat: 1,
+        ease: "power1.inOut",
+        onStart: () => AudioEngine.playPop()
+      }, delay);
+    }
+
+    // ==========================================
+    // ESCENA 1: EL DOLOR vs LA PRESENTACIÓN (0s - 3.5s)
+    // ==========================================
+    masterTimeline.set(phone, {
+      y: 120,
+      rotateX: 18,
+      rotateY: -14,
+      rotateZ: 4,
+      scale: 0.95
+    });
+
+    // Entrada del teléfono con suavidad
+    masterTimeline.to(phone, {
+      y: 0,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      scale: 1,
+      duration: 1.4,
+      ease: "power3.out",
+      onStart: () => AudioEngine.playWhoosh()
+    }, 0);
+
+    // Aparece la notificación molesta de DM
+    masterTimeline.to(painNotif, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      ease: "back.out(1.5)",
+      onStart: () => AudioEngine.playPop()
+    }, 0.8);
+
+    masterTimeline.call(() => {
+      captionText.innerHTML = `¿Cansada de esperar <mark>días por un DM</mark>?`;
+    }, null, 0.8);
+
+    // Swipe out de la notificación molesta (se descarta)
+    masterTimeline.to(painNotif, {
+      y: -120,
+      opacity: 0,
+      scale: 0.9,
+      duration: 0.5,
+      ease: "power2.in",
+      onStart: () => AudioEngine.playWhoosh()
+    }, 2.5);
+
+    // ==========================================
+    // ESCENA 2: EXPLORACIÓN & BÚSQUEDA INTERACTIVA (3.5s - 7.5s)
+    // ==========================================
+    masterTimeline.call(() => {
+      captionText.innerHTML = `Con <mark>Bailapp</mark> encontrás tu clase en segundos`;
+    }, null, 3.2);
+
+    // El teléfono hace un leve tilt cinemático
+    masterTimeline.to(phone, {
+      rotateX: 6,
+      rotateY: 3,
+      scale: 1.03,
+      duration: 1.2,
+      ease: "power2.inOut"
+    }, 3.3);
+
+    // Mover puntero hacia la barra de búsqueda
+    masterTimeline.to(touchPointer, {
+      x: 540,
+      y: 535,
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    }, 3.5);
+
+    // Tap en la barra de búsqueda
+    masterTimeline.to(touchPointer, {
+      scale: 0.7,
+      duration: 0.12,
+      yoyo: true,
+      repeat: 1,
+      onStart: () => {
+        AudioEngine.playPop();
+        searchBox.style.borderColor = 'var(--primary)';
+        searchBox.style.background = '#FFFFFF';
+        searchCursor.style.opacity = '1';
+        searchText.innerHTML = '';
+      }
+    }, 4.3);
+
+    // Efecto de escribir "Heels Palermo"
+    const query = "Heels Palermo";
+    query.split('').forEach((char, i) => {
+      masterTimeline.call(() => {
+        searchText.innerHTML += char;
+        AudioEngine.playPop();
+      }, null, 4.6 + (i * 0.08));
+    });
+
+    // Tap en el chip de Heels
+    masterTimeline.to(touchPointer, {
+      x: 630,
+      y: 605,
+      duration: 0.6,
+      ease: "power2.out"
+    }, 5.8);
+
+    masterTimeline.to(touchPointer, {
+      scale: 0.7,
+      duration: 0.12,
+      yoyo: true,
+      repeat: 1,
+      onStart: () => {
+        AudioEngine.playPop();
+        chipHeels.classList.add('active');
+        // Dynamic Island se expande
+        dynamicIsland.style.width = '180px';
+        islandActive.style.opacity = '1';
+      }
+    }, 6.4);
+
+    // Resaltado de la tarjeta de Studio Flow
+    masterTimeline.to(cardStudioFlow, {
+      scale: 1.03,
+      borderColor: 'var(--primary)',
+      duration: 0.4,
+      ease: "back.out(1.8)"
+    }, 6.6);
+
+    masterTimeline.call(() => {
+      captionText.innerHTML = `Salas con <mark>piso técnico</mark> y cupos en vivo`;
+    }, null, 6.7);
+
+    // ==========================================
+    // ESCENA 3: RESERVA EN 1 TOQUE & CHECKOUT (7.5s - 12.0s)
+    // ==========================================
+    // Mover puntero hacia el botón Reservar de la tarjeta
+    masterTimeline.to(touchPointer, {
+      x: 740,
+      y: 830,
+      duration: 0.6,
+      ease: "power2.out"
+    }, 7.4);
+
+    // Tap en Reservar
+    masterTimeline.to(touchPointer, {
+      scale: 0.7,
+      duration: 0.12,
+      yoyo: true,
+      repeat: 1,
+      onStart: () => AudioEngine.playPop()
+    }, 8.0);
+
+    // Se abre el Bottom Sheet de Reserva
+    masterTimeline.to(bookingSheet, {
+      bottom: 0,
+      duration: 0.6,
+      ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+      onStart: () => AudioEngine.playWhoosh()
+    }, 8.2);
+
+    masterTimeline.call(() => {
+      captionText.innerHTML = `Reservá tu pase digital <mark>en 1 solo clic</mark>`;
+    }, null, 8.4);
+
+    // Mover puntero hacia el botón de confirmación
+    masterTimeline.to(touchPointer, {
+      x: 540,
+      y: 1140,
+      duration: 0.7,
+      ease: "power2.out"
+    }, 8.9);
+
+    // Tap en RESERVAR EN 1 CLIC
+    masterTimeline.to(touchPointer, {
+      scale: 0.75,
+      duration: 0.14,
+      yoyo: true,
+      repeat: 1,
+      onStart: () => {
+        AudioEngine.playPop();
+        btnConfirmCheckout.innerHTML = `<span>Procesando...</span> ⌛`;
+      }
+    }, 9.6);
+
+    // Se oculta el puntero táctil
+    masterTimeline.to(touchPointer, {
+      opacity: 0,
+      scale: 0,
+      duration: 0.3
+    }, 9.9);
+
+    // Aparece Pantalla de Confirmación con Código QR
+    masterTimeline.to(successOverlay, {
+      opacity: 1,
+      pointerEvents: "auto",
+      duration: 0.5,
+      ease: "power2.out",
+      onStart: () => AudioEngine.playSuccessChime()
+    }, 10.3);
+
+    masterTimeline.call(() => {
+      captionText.innerHTML = `🎉 ¡Listo! Pase confirmado con <mark>código QR</mark>`;
+    }, null, 10.4);
+
+    // Teléfono rota suavemente para lucir el pase
+    masterTimeline.to(phone, {
+      rotateX: -4,
+      rotateY: -5,
+      scale: 1.05,
+      duration: 1.4,
+      ease: "power2.inOut"
+    }, 10.4);
+
+    // ==========================================
+    // ESCENA 4: CALL TO ACTION & CIERRE (12.0s - 17.0s)
+    // ==========================================
+    masterTimeline.call(() => {
+      captionText.innerHTML = `Descubrí <mark>Bailapp</mark> en Buenos Aires`;
+    }, null, 12.2);
+
+    // El teléfono se aleja y se desvanece suavemente
+    masterTimeline.to(phone, {
+      scale: 0.85,
+      y: 60,
+      opacity: 0.25,
+      duration: 1.0,
+      ease: "power2.inOut"
+    }, 12.3);
+
+    // Se despliega la pantalla de Outro publicitario
+    masterTimeline.to(outroLayer, {
+      opacity: 1,
+      pointerEvents: "auto",
+      duration: 0.8,
+      ease: "power2.out",
+      onStart: () => AudioEngine.playWhoosh()
+    }, 12.8);
+
+    masterTimeline.from(".outro-logo-box", {
+      scale: 0.7,
+      opacity: 0,
+      duration: 0.6,
+      ease: "back.out(1.8)"
+    }, 13.0);
+
+    masterTimeline.from(".benefit-item", {
+      y: 30,
+      opacity: 0,
+      stagger: 0.15,
+      duration: 0.6,
+      ease: "power3.out"
+    }, 13.3);
+
+    masterTimeline.from("#outro-cta-btn", {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.5,
+      ease: "back.out(2)"
+    }, 13.9);
+
+    // Hold hasta el segundo 17 y reinicia el loop
+    masterTimeline.to({}, { duration: 2.8 }, 14.2);
+
+    // Reinicio limpio de elementos al reiniciar el loop
+    masterTimeline.eventCallback("onRepeat", () => {
+      searchBox.style.borderColor = 'transparent';
+      searchBox.style.background = '#F5EEF2';
+      searchCursor.style.opacity = '0';
+      searchText.innerHTML = 'Explorar estudios y clases...';
+      chipHeels.classList.remove('active');
+      cardStudioFlow.style.borderColor = '#F3E6ED';
+      cardStudioFlow.style.transform = 'scale(1)';
+      bookingSheet.style.bottom = '-600px';
+      btnConfirmCheckout.innerHTML = `<span>RESERVAR EN 1 CLIC</span> <span>⚡</span>`;
+      successOverlay.style.opacity = '0';
+      outroLayer.style.opacity = '0';
+      outroLayer.style.pointerEvents = 'none';
+      dynamicIsland.style.width = '140px';
+      islandActive.style.opacity = '0';
+    });
+
+    // ==========================================
+    // INTERACCIÓN DE CONTROLES (Slider & Botones)
+    // ==========================================
+    const btnPlay = document.getElementById('btn-play');
+    const btnRestart = document.getElementById('btn-restart');
+    const timeSlider = document.getElementById('time-slider');
+    const timeDisplay = document.getElementById('time-display');
+    const btnSpeed = document.getElementById('btn-speed');
+    const btnSound = document.getElementById('btn-sound');
+
+    btnPlay.addEventListener('click', () => {
+      AudioEngine.init();
+      if (masterTimeline.paused()) {
+        masterTimeline.play();
+        btnPlay.innerText = '⏸ Pausar';
+      } else {
+        masterTimeline.pause();
+        btnPlay.innerText = '▶ Reanudar';
+      }
+    });
+
+    btnRestart.addEventListener('click', () => {
+      AudioEngine.init();
+      masterTimeline.restart();
+      btnPlay.innerText = '⏸ Pausar';
+    });
+
+    timeSlider.addEventListener('input', (e) => {
+      masterTimeline.pause();
+      masterTimeline.seek(parseFloat(e.target.value));
+      btnPlay.innerText = '▶ Reanudar';
+    });
+
+    function updateSliderProgress() {
+      const cur = masterTimeline.time();
+      timeSlider.value = cur;
+      const mins = Math.floor(cur / 60).toString().padStart(2, '0');
+      const secs = Math.floor(cur % 60).toString().padStart(2, '0');
+      timeDisplay.innerText = `${mins}:${secs} / 00:17`;
+    }
+
+    const speeds = [1.0, 1.5, 2.0, 0.5];
+    let speedIdx = 0;
+    btnSpeed.addEventListener('click', () => {
+      speedIdx = (speedIdx + 1) % speeds.length;
+      const s = speeds[speedIdx];
+      masterTimeline.timeScale(s);
+      btnSpeed.innerText = `${s.toFixed(1)}x`;
+    });
+
+    btnSound.addEventListener('click', () => {
+      AudioEngine.init();
+      AudioEngine.enabled = !AudioEngine.enabled;
+      btnSound.innerText = AudioEngine.enabled ? '🔊 Sonido ON' : '🔇 Sonido OFF';
+      btnSound.classList.toggle('active', AudioEngine.enabled);
+    });
+
+    // Inicializar audio al primer toque
+    document.body.addEventListener('click', () => {
+      AudioEngine.init();
+    }, { once: true });
+
+    // Exponer API de renderizado para ffmpeg / Lemo-Opuscar
+    window.DUR = 17.0;
+    window.render = async function(t) {
+      masterTimeline.pause();
+      masterTimeline.seek(t);
+    };
+    window.READY = true;
+
+  </script>
+</body>
+</html>

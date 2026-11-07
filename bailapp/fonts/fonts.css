@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Limelight';
+  src: url('Limelight-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poiret';
+  src: url('PoiretOne-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Josefin';
+  src: url('JosefinSans[wght].ttf') format('truetype');
+  font-weight: 100 700;
+}
+@font-face {
+  font-family: 'Italiana';
+  src: url('Italiana-Regular.ttf') format('truetype');
+}

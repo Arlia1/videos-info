@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: linear-gradient(180deg, #FFF5F8 0%, #FDEBF2 35%, #FBD4E3 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bg-panel {
+    position: absolute;
+    top: 150px;
+    width: 950px;
+    height: 1420px;
+    border-radius: 475px 475px 40px 40px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7FA 55%, rgba(254, 237, 244, 0.45) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 35px 80px rgba(224, 99, 133, 0.12);
+    z-index: 1;
+  }
+
+  .studio-sunbeam {
+    position: absolute;
+    top: 190px;
+    right: 70px;
+    width: 400px;
+    height: 650px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 245, 248, 0) 70%);
+    border-radius: 30px;
+    transform: rotate(6deg);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .header-badge {
+    position: absolute;
+    top: 100px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFFFFF;
+    padding: 16px 38px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(224, 99, 133, 0.15);
+    border: 2px solid #FAD2E1;
+    z-index: 10;
+  }
+  .header-badge .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #E06385;
+    box-shadow: 0 0 14px #E06385;
+  }
+  .header-badge span {
+    font-size: 24px;
+    font-weight: 800;
+    color: #3D2D3B;
+    letter-spacing: 0.6px;
+  }
+
+  /* LEFT SIDE FLOATING CARDS */
+  .cards-column {
+    position: absolute;
+    top: 250px;
+    left: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    z-index: 10;
+    width: 420px;
+  }
+
+  .floating-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 20px 26px;
+    box-shadow: 0 16px 36px rgba(216, 27, 96, 0.09);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 2px solid #FCE4EC;
+  }
+
+  .icon-bubble {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .icon-bubble.grey { background: #F5EBF0; color: #8C7A87; }
+  .icon-bubble.red { background: #FFEBEE; color: #E53935; }
+  .icon-bubble.pink { background: #FFE4EC; color: #E06385; }
+
+  .card-text .title {
+    font-size: 21px;
+    font-weight: 800;
+    color: #382E39;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .card-text .subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #9C8997;
+  }
+
+  /* CHARACTER STAGE */
+  .character-stage {
+    position: absolute;
+    bottom: 370px;
+    right: 50px;
+    width: 540px;
+    height: 1100px;
+    z-index: 6;
+  }
+
+  .subtitle-safezone {
+    position: absolute;
+    bottom: 240px;
+    width: 940px;
+    text-align: center;
+    z-index: 20;
+    padding: 24px 36px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 36px;
+    border: 2px solid #FAD2E1;
+    box-shadow: 0 22px 55px rgba(74, 62, 77, 0.08);
+  }
+
+  .subtitle-text {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: #2D242E;
+  }
+
+  .highlight-pink {
+    color: #C2185B;
+    background: #FCE4EC;
+    padding: 2px 14px;
+    border-radius: 14px;
+    display: inline-block;
+  }
+
+  .app-preview-bar {
+    position: absolute;
+    bottom: 80px;
+    width: 900px;
+    background: #2D242E;
+    color: #FFFFFF;
+    padding: 22px 38px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 20px 45px rgba(45, 36, 46, 0.22);
+  }
+  .app-preview-bar .logo-name {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-preview-bar .cta-pill {
+    background: #F8BBD0;
+    color: #880E4F;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 14px 32px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-panel"></div>
+  <div class="studio-sunbeam"></div>
+
+  <!-- Header Badge en español -->
+  <div class="header-badge">
+    <div class="dot"></div>
+    <span>LA REALIDAD DE BUSCAR CLASES</span>
+  </div>
+
+  <!-- Tarjetas flotantes a la izquierda -->
+  <div class="cards-column">
+    <div class="floating-card">
+      <div class="icon-bubble grey">💬</div>
+      <div class="card-text">
+        <div class="title">"¿Tienen cupos en Heels?"</div>
+        <div class="subtitle">Visto hace 3 días · Sin respuesta</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble red">⚠️</div>
+      <div class="card-text">
+        <div class="title">"Solo nivel profesional"</div>
+        <div class="subtitle">Vos querías nivel inicial...</div>
+      </div>
+    </div>
+
+    <div class="floating-card">
+      <div class="icon-bubble pink">📍</div>
+      <div class="card-text">
+        <div class="title">A 2 horas de tu casa</div>
+        <div class="subtitle">Un martes a las 14:00 hs 🙃</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODELO 3: BAILARINA CONTEMPO / HEELS (CORTE LAYERED AIRY + TOP MANGA LARGA ESPRESSO + SWEATPANTS ARENA) -->
+  <div class="character-stage">
+    <svg width="540" height="1100" viewBox="0 0 380 490" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="characterShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#C2185B" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+
+      <!-- Floor Contact Shadow -->
+      <ellipse cx="190" cy="460" rx="140" ry="16" fill="#E8BCC8" fill-opacity="0.5"/>
+
+      <!-- Rig Humaaans Modelo 3 -->
+      <g id="a-standing-human" transform="translate(190, 240) scale(-1, 1) translate(-190, -240) translate(40, 20)" filter="url(#characterShadow)">
+
+        <!-- 1. BOTTOM: SWEATPANTS (Elegant, relaxed dancer line) -->
+        <g id="BOTTOM" transform="translate(0, 187)">
+          <polygon id="Leg-Back" fill="#DFB59A" points="128 0 164.63 126.23 181.86 221 199.15 221 181.89 0"/>
+          <path id="Leg-Front" d="M111.54,0 C114.09,65.57 113.09,101.34 112.51,107.3 C111.94,113.26 108.69,153.16 86.56,223 L104.55,223 C133.86,156 144.09,116.1 147.45,107.3 C148.81,98.5 160.74,62.73 175.23,0 L111.54,0 Z" fill="#F2C8B0"/>
+
+          <!-- Pant Legs in Elegant Sand/Ivory Tone -->
+          <path id="Pant-Back" d="M127.21,0 C136.74,43.44 153.22,112.77 176.65,208 L201.95,208 C203.81,110.25 195.87,45.92 182.1,0 L127.21,0 Z" fill="#D3C5B4"/>
+          <path id="Pant-Front" d="M111.41,0 C113.91,65.57 107.43,130.18 87.33,209.02 L114.32,209.02 C143.68,143.02 164.72,78.73 179.11,0 L111.41,0 Z" fill="#E4D7C7" stroke="#BAAA98" stroke-width="2"/>
+
+          <!-- Clean White Modern Platform Sneakers -->
+          <g id="Shoe-Left" transform="translate(84, 199)" fill="#FFFFFF">
+            <path d="M0,37 L0.99,21 C6.8,22.7 14.08,22.03 22.83,19 C32.23,25.66 44.07,30.21 58.34,32.64 C59.43,32.83 60.16,33.86 59.97,34.95 C59.96,35.02 59.94,35.09 59.92,35.16 L58.55,40 L22.83,40 L1.98,40 L0,37 Z" stroke="#D1C2CB" stroke-width="2"/>
+            <path d="M15 38 L55 38" stroke="#F48FB1" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g id="Shoe-Right" transform="translate(178, 199)" fill="#FFFFFF">
+            <path d="M0,37 L0.99,21 C6.8,22.7 14.08,22.03 22.83,19 C32.23,25.66 44.07,30.21 58.34,32.64 C59.43,32.83 60.16,33.86 59.97,34.95 C59.96,35.02 59.94,35.09 59.92,35.16 L58.55,40 L22.83,40 L1.98,40 L0,37 Z" stroke="#D1C2CB" stroke-width="2"/>
+            <path d="M15 38 L55 38" stroke="#F48FB1" stroke-width="3" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- 2. TORSO: FITTED LONG SLEEVE TOP (Rich Dark Espresso Brown / Contemporary Dancer Look) -->
+        <g id="TORSO" transform="translate(22, 82)">
+          <!-- Bare Skin Details -->
+          <path id="Skin-Arms" d="M192,65.31 L231.48,59.93 C239.38,55.53 246.65,52.56 253.28,51 C255.15,50.95 258.12,51.63 253.69,55.32 C249.27,59 244.78,63.08 245.57,65.05 C246.36,67.02 250.47,66.29 251.15,69.31 C251.61,71.33 244.93,71.66 231.12,70.3 L199.08,83 L192,65.31 Z M67.97,74.45 L89.87,74.53 C65.86,128.57 53.34,156.86 52.31,159.41 C49.99,165.14 54.89,173.87 56.98,178.57 C50.16,181.62 50.89,170.32 42.29,174.32 C34.44,177.97 28.46,184.59 19.39,178.99 C18.27,178.31 17.05,175.71 20,173.69 C27.36,168.64 37.97,159.81 39.4,156.91 C41.35,152.94 50.88,125.46 67.97,74.45 Z" fill="#F2C8B0"/>
+
+          <!-- Clothes Back (Deep Espresso Brown) -->
+          <path id="Clothes-Back" d="M123.47,9.67 L140.65,9.31 C148.19,47 173.2,69.03 223.79,56.41 L234.89,104.82 C187.49,115.21 143.76,99.69 130.6,48.47 C127.19,35.22 124.2,21.37 123.47,9.67 Z" fill="#2D1D16" transform="translate(179.18, 58.59) rotate(5) translate(-179.18, -58.59)"/>
+
+          <!-- Fitted Front Top (Espresso Chic) -->
+          <path id="Clothes-Front" d="M119.49,0.02 L145.47,5.97 C145.47,50.64 159.7,79.15 167,112 L96.84,112 C95.86,123.35 95.25,135.02 94.93,147 L42.4,147 C54.31,83.66 79.43,34.66 117.78,0 L119.48,0 L119.49,0.02 Z" fill="#3A261D"/>
+          <path id="Shade" d="M107.91,48.26 C106.1,76.1 107.17,97.35 111.1,112 L96.84,112 C98.8,89.51 102.26,68.27 107.91,48.26 Z" fillOpacity="0.15" fill="#000000"/>
+
+          <!-- Floating Smartphone in hand -->
+          <g id="Hand-Phone" transform="translate(230, 30) scale(0.65)">
+            <rect x="0" y="0" width="45" height="75" rx="8" fill="#1C1820" stroke="#FFFFFF" stroke-width="2"/>
+            <rect x="4" y="5" width="37" height="63" rx="5" fill="#FFF0F5"/>
+            <rect x="16" y="8" width="14" height="3" rx="1.5" fill="#1C1820"/>
+            <rect x="8" y="18" width="22" height="5" rx="2" fill="#F48FB1"/>
+            <rect x="14" y="27" width="23" height="5" rx="2" fill="#E06385"/>
+            <rect x="8" y="36" width="25" height="5" rx="2" fill="#F48FB1"/>
+          </g>
+        </g>
+
+        <!-- 3. HEAD: AIRY LAYERED CUT (NO PONYTAIL, CHIC & STYLISH) -->
+        <g id="HEAD" transform="translate(82, 0)">
+          <!-- Head Base & Skin -->
+          <g id="Head-Skin" transform="translate(54, 31)" fill="#F2C8B0">
+            <path d="M8.26,34.49 C3.65,29.08 0.54,22.45 1.06,15.03 C2.56,-6.38 32.35,-1.67 38.14,9.13 C43.94,19.94 43.25,47.33 35.76,49.26 C32.77,50.03 26.41,48.15 19.94,44.24 L24,73 L0,73 L8.26,34.49 Z"/>
+            <circle cx="28" cy="40" r="3" fill="#E06385"/>
+          </g>
+
+          <!-- Layered Airy Hair Framing Jawline (Warm Dark Brunette) -->
+          <path id="Hair-Airy" d="M78.46,27.69 C75.3,27.17 66.78,26.81 65.21,26.81 C64.21,26.81 63.12,27.04 62.53,26.12 C62.04,25.36 62.22,24.09 62.07,23.21 C61.9,22.19 61.67,21.19 61.42,20.19 C60.73,17.34 59.69,14.62 58.23,12.08 C55.49,7.3 51.48,3.56 46.42,1.38 C40.82,-1.02 34.5,-1.57 28.48,-1.08 C22.04,-0.56 16.22,1.56 10.14,3.56 C4.35,5.47 -1.72,6.22 -7.78,5.29 C-13.88,4.35 -18.49,1.04 -23.64,-2.1 C-28.91,-5.31 -34.93,-7.41 -41.16,-6.93 C-46.98,-6.48 -52.34,-4.08 -57.15,-0.87 C-61.65,2.13 -65.36,5.74 -67.46,10.82 C-69.71,16.29 -69.71,22.29 -66,27.12 C-60.63,34.13 -50.65,35.94 -42.35,35.76 C-37.55,35.65 -32.83,34.78 -28.3,33.18 C-22.25,31.06 -17.03,27.45 -11.37,24.53 C-8.72,23.16 -5.98,22.03 -3.1,21.22 C-0.31,20.43 2.44,20.07 4.97,21.75 C7.64,23.54 10.03,25.29 13.09,26.4 C16.03,27.48 19.13,28.08 22.26,28.05 C28.34,28 34.33,26.11 40.24,24.84 C45.05,23.81 50.21,22.77 55.12,23.77 C57.17,24.18 60.16,25.04 60.9,27.17 C48.44,29.43 43.55,44.83 47.06,56.14 C48.96,62.24 60.35,69.37 64.78,66.17 C67.58,64.13 65.88,61.46 64.78,59.7 C62.67,56.33 61.95,52 65.85,49.65 C69.22,47.62 72.76,52.43 72.83,52.43 C73.76,52.35 81.76,47.83 87.27,41.22 C92.71,41.55 93.54,37.96 92.24,35.03 C90.94,32.09 82.83,28.4 78.46,27.69" fill="#251610" transform="translate(20, 0)"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Subtítulo en Safe Zone (38% desde la base) -->
+  <div class="subtitle-safezone">
+    <div class="subtitle-text">
+      ¿Cansada de mandar <span class="highlight-pink">10 DMs</span> y que nadie conteste?
+    </div>
+  </div>
+
+  <!-- Barra inferior con 'Bailapp' todo junto -->
+  <div class="app-preview-bar">
+    <div class="logo-name">
+      🩰 Bailapp
+    </div>
+    <div class="cta-pill">RESERVÁ TU CLASE YA</div>
+  </div>
+
+</body>
+</html>
