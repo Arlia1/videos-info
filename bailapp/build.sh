@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
-LIB=/home/yoel1/lemo-opuscar
+LIB=${LIB:-$HOME/lemo-opuscar}
 export LIB
 [ -f "$LIB/core/render/video.mjs" ] || { echo "set LIB to the library folder"; exit 1; }
 cd "$LIB"

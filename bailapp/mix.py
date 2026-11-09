@@ -7,7 +7,7 @@ import soundfile as sf
 import soxr
 
 D = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.environ.get('LIB', '/home/yoel1/lemo-opuscar')
+ROOT = os.environ.get('LIB', os.path.expanduser('~/lemo-opuscar'))
 sys.path.insert(0, ROOT)
 
 from core.audio.sfx import (

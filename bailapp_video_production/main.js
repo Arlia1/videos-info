@@ -86,18 +86,22 @@ function drawHeaderBadge(g, title = 'Bailapp') {
 
 // Bulletproof Subtitle Safe Zone (38% from bottom = Y around 1370)
 // Completely fixes off-center text and overflow bugs!
+// -------------------------------------------------------------
+// CAPA 4: SUBTÍTULOS EN SAFE ZONE INVIOLABLE (ALTO CONTRASTE Y PREVENCIÓN DE DESBORDE)
+// -------------------------------------------------------------
 function drawSubtitleSafeZone(g, text) {
   const subY = 1370;
   const pillW = 960;
-  const pillH = 130;
+  const pillH = 140;
   const pillX = (W - pillW) / 2;
+  const maxW = pillW - 90; // Margen interno de seguridad (870px)
 
   g.save();
   
   // Background Card
-  g.fillStyle = 'rgba(255, 255, 255, 0.96)';
-  g.shadowColor = 'rgba(216, 27, 96, 0.14)';
-  g.shadowBlur = 28;
+  g.fillStyle = 'rgba(255, 255, 255, 0.98)';
+  g.shadowColor = 'rgba(216, 27, 96, 0.18)';
+  g.shadowBlur = 32;
   g.shadowOffsetY = 12;
   roundRect(g, pillX, subY, pillW, pillH, 36);
   g.fill();
@@ -111,27 +115,55 @@ function drawSubtitleSafeZone(g, text) {
   // Text Centering Logic
   g.textAlign = 'center';
   g.textBaseline = 'middle';
+  g.fillStyle = '#2D242E';
 
-  const maxCharsPerLine = 38;
-  let lines = [];
+  function wrapWordsToLines(words, maxLineWidth) {
+    const lines = [];
+    let curLine = '';
+    for (let i = 0; i < words.length; i++) {
+      const test = curLine ? curLine + ' ' + words[i] : words[i];
+      if (g.measureText(test).width <= maxLineWidth) {
+        curLine = test;
+      } else {
+        if (curLine) lines.push(curLine);
+        curLine = words[i];
+      }
+    }
+    if (curLine) lines.push(curLine);
+    return lines;
+  }
 
-  if (text.length <= maxCharsPerLine) {
-    lines = [text];
-  } else {
-    const words = text.split(' ');
-    let mid = Math.ceil(words.length / 2);
-    lines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+  const words = text.split(' ');
+  let fontSize = 33;
+  g.font = `800 ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+  let lines = wrapWordsToLines(words, maxW);
+
+  if (lines.length > 2) {
+    fontSize = 27;
+    g.font = `800 ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    lines = wrapWordsToLines(words, maxW);
+  }
+
+  while (lines.length > 2 && fontSize > 18) {
+    fontSize -= 2;
+    g.font = `800 ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    lines = wrapWordsToLines(words, maxW);
   }
 
   if (lines.length === 1) {
     g.font = '800 34px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    g.fillStyle = '#2D242E';
     g.fillText(lines[0], CX, subY + pillH / 2);
+  } else if (lines.length === 2) {
+    const lineHeight = fontSize + 12;
+    const startY = subY + (pillH / 2) - (lineHeight / 2);
+    g.fillText(lines[0], CX, startY);
+    g.fillText(lines[1], CX, startY + lineHeight);
   } else {
-    g.font = '800 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    g.fillStyle = '#2D242E';
-    g.fillText(lines[0], CX, subY + 44);
-    g.fillText(lines[1], CX, subY + 86);
+    const lineHeight = fontSize + 8;
+    const startY = subY + (pillH / 2) - lineHeight;
+    lines.slice(0, 3).forEach((line, idx) => {
+      g.fillText(line, CX, startY + idx * lineHeight);
+    });
   }
 
   g.restore();
