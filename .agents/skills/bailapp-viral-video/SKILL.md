@@ -155,9 +155,17 @@ Para evitar errores visuales comunes en escenas 3D renderizadas por código, se 
   - Todo cartel flotante lateral debe tener un ancho máximo acotado ($1.2$ a $1.4$ m) o situarse con centro en $X \in [-0.25, 0.25]$ si es ancho ($1.8$ a $2.1$ m).
   - Ningún cartel puede quedar cortado por el borde lateral o superior de la cámara.
 
-### C. Posicionamiento Dinámico sobre Objetos y Generación de Nuevos Escenarios
-- Si el personaje se posiciona sobre un objeto (sentado en la cama, apoyado en una mesada o parado sobre un podio elevado), **su coordenada de origen no debe fijarse en $Y = 0.00$**.
-  - Debe calibrarse al nivel de la superficie: `root.position.y = alturaSuperficie` (ej. cama: $Y = 0.45$ m, silla: $Y = 0.50$ m, podio: $Y = 0.40$ m).
+### C. Posicionamiento Dinámico sobre Objetos y Grounding Inviolable (Superficies)
+> [!IMPORTANT]
+> Ver skill complementaria obligatoria: `.agents/skills/threejs-grounding-anti-superposicion/SKILL.md`.
+- **CERO PERSONAJES FLOTANDO:** Ningún personaje puede tener los pies flotando en el aire sobre el suelo o sobre cualquier mueble.
+- Si el personaje se posiciona sobre un objeto (sentado en la cama, apoyado en una mesada o parado sobre un podio elevado), **su coordenada de origen no debe fijarse en $Y = 0.00$ ciega ni arbitrariamente**.
+  - Debe calibrarse exactamente a la altura de contacto de la superficie:
+    - Piso de parquet / Estudio: `Y = 0.00`
+    - Cinta de correr del gimnasio: `Y = 0.24`
+    - Podio 1º puesto: `Y = 0.65`, 2º puesto: `Y = 0.42`, 3º puesto: `Y = 0.30`
+    - Almohadón del sillón: `Y = 0.44` (con articulación de piernas en ángulo de 90°)
+    - Colchón de la cama: `Y = 0.70`
 - **Generación de Escenas Nuevas por Guion:** Si el guion plantea una temática específica (ej. gimnasio con pesas, oficina, estudio con barra de ballet), **se debe programar proceduralmente la escena nueva correspondiente** (`stage_gym.js`, `stage_office.js`), sin reciclar forzadamente el dormitorio para situaciones que requieren otro contexto.
 
 ### D. Cámara con Movimiento Continuo y Dinámico
@@ -167,7 +175,11 @@ Para evitar errores visuales comunes en escenas 3D renderizadas por código, se 
   - Órbitas cinemáticas circulares o arcos de 3/4 que acentúen la tridimensionalidad low-poly.
   - Sincronización precisa entre las aceleraciones de cámara y los drops musicales.
 
-### E. Aislamiento Escénico Estricto (Cero Cosas Superpuestas)
+### E. Aislamiento Escénico Estricto y Cero Superposición de Bloques (Anti-Clipping)
+> [!IMPORTANT]
+> Todo elemento 3D (carteles, muebles, pantallas, personajes) debe cumplir las reglas de separación espacial para evitar solapamientos visuales (z-fighting, colisión de mallas, carteles incrustados en cabezas).
+- **Separación entre bailarines:** Distancia lateral mínima $|\Delta X| \ge 0.85$ m o escalonamiento en Z ($|\Delta Z| \ge 0.5$ m) para evitar colisión de extremidades en animaciones rítmicas.
+- **Carteles flotantes:** Altura mínima sobre la coronilla del personaje ($Y \ge 2.15$ m) o desplazamiento lateral con margen ($|\Delta X| \ge 0.75$ m). Nunca atravesar la cabeza del personaje.
 - En cada transición entre escenas narrativas ($t \ge t_{corte}$), **todos** los elementos pertenecientes a la escena previa deben desactivarse de forma inmediata e inequívoca:
   ```javascript
   stagePrevio.visible = false;
@@ -175,6 +187,7 @@ Para evitar errores visuales comunes en escenas 3D renderizadas por código, se 
   charPrevio.root.visible = false;
   ```
 - No pueden quedar carteles huérfanos, sombras residuales ni geometrías del plano anterior flotando en la escena activa.
+- **Auditoría Previa de 3 Stills:** Antes de dar por bueno un render, capturar 3 fotogramas de prueba en $t=2s$, $t=12s$ y $t=22s$ para verificar apoyo de pies y ausencia de colisiones.
 
 ---
 
@@ -271,15 +284,42 @@ Queda **terminantemente prohibido** que los personajes o elementos del entorno 3
 
 ---
 
-## 7. Safe Zones, Centrado y Prevención Inflexible de Desbordes de Texto
+## 7. Contención Inviolable de Textos dentro de sus Contenedores (Cero Desbordes)
+
+> [!IMPORTANT]
+> Ver skill complementaria: `.agents/skills/threejs-grounding-anti-superposicion/SKILL.md` (Sección 4.4 y 4.5).
+> **REGLA MANDATORIA DE CONTENCIÓN:**
+> Todo texto que se renderice dentro de cualquier contenedor visual (tarjetas, badges, pastillas/chips, botones, carteles 3D, modales o subtítulos) **DEBE quedar 100% contenido en su interior**.
+> Queda terminantemente **PROHIBIDO** que cualquier texto, letra o glifo desborde, sobresalga, se corte o toque los bordes de su caja contenedora.
 
 Queda **estrictamente prohibido**:
 - Dividir textos a ciegas con `split(' ')` por la mitad asumiendo 2 líneas fijas.
 - Usar tamaños de fuente estáticos sin verificar la medida real con `g.measureText()`.
 - Permitir que una sola fila de chips de categorías desborde el ancho útil de un smartphone o tarjeta.
 - Cualquier texto que toque o traspase el borde de su contenedor (tarjeta, píldora de subtítulo o chip).
+- Diseñar botones o badges donde las palabras largas queden pegadas al radio de curvatura (`roundRect`).
 
-### A. Algoritmo Canónico para Subtítulos Seguros (`drawSubtitleSafeZone`)
+### A. Invariante de Padding Interno Seguro (Safe Inner Padding)
+- **Padding horizontal mínimo:** $10\%$ del ancho de la caja o al menos $20$ px a cada lado.
+- **Padding vertical mínimo:** al menos $12$ a $16$ px arriba y abajo.
+- El ancho disponible para texto siempre es: $W_{\text{disponible}} = W_{\text{contenedor}} - 2 \times \text{paddingX}$.
+
+### B. Algoritmo Obligatorio de Auto-Fit de Fuente (Auto-Scaling):
+Antes de ejecutar `fillText()` en cualquier contenedor de tamaño predeterminado:
+```javascript
+function fitTextInBox(ctx, text, maxW, baseSize = 32, minSize = 14) {
+  let size = baseSize;
+  ctx.font = `700 ${size}px "Outfit", sans-serif`;
+  let measured = ctx.measureText(text).width;
+  if (measured > maxW) {
+    size = Math.max(minSize, Math.floor(baseSize * (maxW / measured)));
+    ctx.font = `700 ${size}px "Outfit", sans-serif`;
+  }
+  return size;
+}
+```
+
+### C. Algoritmo Canónico para Subtítulos Seguros (`drawSubtitleSafeZone`)
 El contenedor de subtítulos se sitúa en la safe zone vertical ($Y = 1370\text{ px}$, $W = 960\text{ px}$, $H = 132\text{ px}$). El texto interno **debe ajustarse dinámicamente** mediante partición inteligente por palabras y escalado dinámico de fuente:
 
 ```javascript

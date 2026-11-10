@@ -159,8 +159,13 @@ Cuando se le solicite un video sobre un tema específico, el agente debe seguir 
    - Definir el tono de voz (para ElevenLabs / Edge-TTS), pausas intencionales y momentos de atenuación musical (*audio ducking*).
 3. **Fase de Implementación de Código:**
    - Escribir el código React Three Fiber respetando todas las reglas deterministas (`useCurrentFrame`, sin `useFrame`, dimensiones explícitas en canvas y `layout="none"` en `<Sequence>`).
-4. **Verificación de Seguridad:**
+4. **Verificación de Seguridad y Zonas Seguras:**
    - Confirmar que las posiciones de los elementos visuales respeten las zonas seguras verticales de 9:16.
+5. **Grounding y Verificación Anti-Superposición (Cero Flotación & Zero Clipping):**
+   - Mandatorio consultar `threejs-grounding-anti-superposicion`.
+   - Verificar que todos los personajes y props toquen de forma exacta su superficie de apoyo (`Y = Y_surface`). Queda terminantemente prohibido dejar personajes flotando o hundidos.
+   - Auditar que ningún cartel o texto 3D colisione o corte la cabeza/cuerpo de los avatares.
+   - En formaciones grupales, garantizar una separación lateral mínima $\ge 0.85$ m.
 
 ---
 

@@ -1,1 +1,0 @@
-../bailapp_shared_3d/three.module.js

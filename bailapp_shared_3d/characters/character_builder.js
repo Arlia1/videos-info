@@ -1,17 +1,25 @@
 // ============================================================================
-// BAILAPP 3D SHARED ASSET LIBRARY: CHARACTER BUILDER (ENHANCED LOW-POLY V4)
+// BAILAPP 3D — CHARACTER BUILDER V12 (PERFECTED SCULPTED DANCER & VOLUMETRIC HAIR)
 // ============================================================================
-// - Rostro 100% geométrico 3D (CERO planos cuadrados, CERO texturas 2D planas).
-// - Esclera blanca esculpida, iris profundo, pupila, doble brillo especular kawaii.
-// - Pestañas y delineado alado, cejas expresivas y sonrisa radiante en 3D con dientes.
-// - Base craneal facetada continua con pómulos suaves y mentón cónico.
-// - Pies 100% apoyados en el piso real (Y = 0.00) con suelas chunky y sombra de contacto.
+// Directivas exactas del usuario:
+// 1. Escenas: NO TOCADAS (permanecen vacías, congeladas y aprobadas).
+// 2. Rostros: NO TOCADOS (ojos almendrados con punto blanco, cejas cuadradas,
+//    boca en línea, mentón y cráneo aprobados).
+// 3. Brazos: NO TOCADOS (hombros, codos, antebrazos, manos y pulgares aprobados).
+// 4. RESTO DEL CUERPO REHECHO DESDE CERO:
+//    - Cero salientes ni estantes: pretina entallada cónica que abraza la cintura.
+//    - Transición continua y suave de torso -> cintura -> cadera -> muslos -> rodilla -> pantorrilla -> calzado.
+//    - Zapatillas chunky apoyadas exactamente en el suelo (Y = 0.00).
+// 5. CABELLO CON GRAN VOLUMEN 3D Y FRENTE DESPEJADA:
+//    - Cúpula craneal de gran volumen con nacimiento de cabello en arco estilizado (curtain bangs).
+//    - Frente, cejas (Y=0.113) y ojos (Y=0.065) 100% DESPEJADOS e iluminados.
+//    - Siluetas icónicas y volumétricas para cada peinado (ondas, rodete, coleta K-pop, bob).
 // ============================================================================
 
 import * as THREE from '../three.module.js';
+import { buildHairstyle } from './hair_styles.js';
 
-// Material base Low-Poly con flatShading puro y respuesta lumínica suave
-export function createLowPolyMaterial(color, roughness = 0.72, metalness = 0.05) {
+export function createLowPolyMaterial(color, roughness = 0.82, metalness = 0.03) {
   return new THREE.MeshStandardMaterial({
     color: new THREE.Color(color),
     roughness,
@@ -21,372 +29,254 @@ export function createLowPolyMaterial(color, roughness = 0.72, metalness = 0.05)
 }
 
 /**
- * Crea un personaje 3D con silueta orgánica estilizada y geometría facetada.
+ * Constructor de Personaje Bailapp V12
  */
 export function buildEnhancedCharacter(opts = {}) {
   const root = new THREE.Group();
 
-  // --- PALETA Y MATERIALES ---
-  const skinColor = opts.skinColor || '#FFD5B8';
-  const hairColor = opts.hairColor || '#2D242E';
+  // Paleta de color
+  const skinColor = opts.skinColor || '#FFDEC8';
+  const hairColor = opts.hairColor || '#231B26';
   const topColor = opts.topColor || '#E06385';
-  const bottomColor = opts.bottomColor || opts.pantsColor || '#1F2937';
+  const bottomColor = opts.bottomColor || '#1F2937';
   const shoesColor = opts.shoesColor || '#FFFFFF';
   const accentColor = opts.accentColor || '#F472B6';
   const soleColor = opts.soleColor || '#F3F4F6';
 
-  const skinMat = createLowPolyMaterial(skinColor, 0.68, 0.04);
-  const hairMat = createLowPolyMaterial(hairColor, 0.85);
-  const topMat = createLowPolyMaterial(topColor, 0.75);
-  const bottomMat = createLowPolyMaterial(bottomColor, 0.80);
-  const shoesMat = createLowPolyMaterial(shoesColor, 0.65);
-  const soleMat = createLowPolyMaterial(soleColor, 0.85);
-  const accentMat = createLowPolyMaterial(accentColor, 0.70);
+  const skinMat = createLowPolyMaterial(skinColor, 0.80, 0.0);
+  const hairMat = createLowPolyMaterial(hairColor, 0.88, 0.0);
+  const topMat = createLowPolyMaterial(topColor, 0.78, 0.02);
+  const bottomMat = createLowPolyMaterial(bottomColor, 0.82, 0.0);
+  const shoesMat = createLowPolyMaterial(shoesColor, 0.68, 0.0);
+  const soleMat = createLowPolyMaterial(soleColor, 0.85, 0.0);
+  const accentMat = createLowPolyMaterial(accentColor, 0.75, 0.02);
+
+  const blackMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+  const whiteMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
 
   const parts = {};
 
-  // -----------------------------------------------------------
-  // 1. SOMBRA DE CONTACTO VOLUMÉTRICA EN EL PISO REAL (Y = 0.005)
-  // -----------------------------------------------------------
-  const shadowGeo = new THREE.CylinderGeometry(0.48, 0.52, 0.01, 16);
+  // 1. Sombra de contacto en el piso (Y = 0.00)
+  const shadowGeo = new THREE.CylinderGeometry(0.44, 0.48, 0.004, 14);
   const shadowMat = new THREE.MeshBasicMaterial({
-    color: 0x2A1525,
+    color: 0x3A1B28,
     transparent: true,
     opacity: 0.22,
   });
   const contactShadow = new THREE.Mesh(shadowGeo, shadowMat);
-  contactShadow.position.y = 0.005;
+  contactShadow.position.y = 0.002;
   root.add(contactShadow);
   parts.contactShadow = contactShadow;
 
-  // -----------------------------------------------------------
-  // 2. CADERA / PELVIS (Pivote calibrado para que los pies toquen Y = 0.00)
-  // Altura base: Hips a Y = 0.84 -> Pierna 0.08 + 0.38 + 0.38 = 0.84 -> Suela toca Y = 0.00
-  // -----------------------------------------------------------
+  // ==========================================================================
+  // 2. CADERA / PELVIS ESCULPIDA (BASE Y = 0.78)
+  // ==========================================================================
   const hips = new THREE.Group();
-  hips.position.y = 0.84;
+  hips.position.y = 0.78;
   root.add(hips);
   parts.hips = hips;
 
-  // Pelvis / Shorts facetados
-  const pelvisGeo = new THREE.CylinderGeometry(0.23, 0.26, 0.22, 10);
-  const pelvisMesh = new THREE.Mesh(pelvisGeo, bottomMat);
-  pelvisMesh.scale.set(1.15, 1.0, 0.78);
-  pelvisMesh.castShadow = true;
-  pelvisMesh.receiveShadow = true;
-  hips.add(pelvisMesh);
+  const isJogger = (opts.pantsLength === 'jogger');
+  const isCrop = (opts.topType === 'croptop');
+  const isHoodie = (opts.topType === 'hoodie');
 
-  // Cinturón de contraste
-  const beltGeo = new THREE.CylinderGeometry(0.235, 0.24, 0.04, 10);
-  const beltMesh = new THREE.Mesh(beltGeo, accentMat);
-  beltMesh.position.y = 0.09;
-  beltMesh.scale.set(1.16, 1.0, 0.80);
-  hips.add(beltMesh);
+  const pelvisGroup = new THREE.Group();
+  hips.add(pelvisGroup);
+  parts.pelvis = pelvisGroup;
 
-  // -----------------------------------------------------------
-  // 3. TORSO ARTICULADO (Cintura + Pecho / Ribcage)
-  // -----------------------------------------------------------
+  // Cuenca pélvica femenina atlética
+  const pelvisCoreGeo = new THREE.CylinderGeometry(0.174, 0.148, 0.18, 12);
+  const pelvisCore = new THREE.Mesh(pelvisCoreGeo, bottomMat);
+  pelvisCore.position.y = -0.01;
+  pelvisCore.scale.set(1.15, 1.0, 0.84);
+  pelvisCore.castShadow = true;
+  pelvisGroup.add(pelvisCore);
+
+  // Sillín inguinal continuo
+  const crotchGeo = new THREE.CylinderGeometry(0.065, 0.048, 0.14, 8);
+  const crotch = new THREE.Mesh(crotchGeo, bottomMat);
+  crotch.position.set(0, -0.08, 0.0);
+  crotch.scale.set(1.0, 1.0, 0.82);
+  crotch.castShadow = true;
+  pelvisGroup.add(crotch);
+
+  // Pretina entallada que abraza la cintura suavemente (sin estantes salientes)
+  const waistbandGeo = new THREE.CylinderGeometry(0.150, 0.176, 0.04, 12);
+  const waistband = new THREE.Mesh(waistbandGeo, accentMat);
+  waistband.position.y = 0.08;
+  waistband.scale.set(1.14, 1.0, 0.82);
+  waistband.castShadow = true;
+  pelvisGroup.add(waistband);
+
+  // ==========================================================================
+  // 3. TORSO CONTINUO Y ESCULPIDO
+  // ==========================================================================
   const torso = new THREE.Group();
-  torso.position.y = 0.11;
+  torso.position.y = 0.06;
   hips.add(torso);
   parts.torso = torso;
 
-  // Cintura
-  const waistMat = (opts.topType === 'croptop' || opts.topType === 'sports_bra') ? skinMat : topMat;
-  const waistGeo = new THREE.CylinderGeometry(0.20, 0.22, 0.16, 10);
-  const waistMesh = new THREE.Mesh(waistGeo, waistMat);
-  waistMesh.position.y = 0.08;
-  waistMesh.scale.set(1.08, 1.0, 0.74);
-  waistMesh.castShadow = true;
-  torso.add(waistMesh);
+  // A. Cintura estilizada de bailarina (entallada y continua)
+  const waistMat = isCrop ? skinMat : topMat;
+  const waistGeo = new THREE.CylinderGeometry(0.130, 0.152, 0.18, 12);
+  const waist = new THREE.Mesh(waistGeo, waistMat);
+  waist.position.y = 0.08;
+  waist.scale.set(1.10, 1.0, 0.78);
+  waist.castShadow = true;
+  torso.add(waist);
 
-  // Pecho
+  // B. Caja Torácica y Pecho
   const chestGroup = new THREE.Group();
-  chestGroup.position.y = 0.16;
+  chestGroup.position.y = 0.15;
   torso.add(chestGroup);
   parts.chest = chestGroup;
 
-  const chestGeo = new THREE.CylinderGeometry(0.26, 0.20, 0.32, 10);
-  const chestMesh = new THREE.Mesh(chestGeo, topMat);
-  chestMesh.position.y = 0.16;
-  chestMesh.scale.set(1.15, 1.0, 0.76);
-  chestMesh.castShadow = true;
-  chestMesh.receiveShadow = true;
-  chestGroup.add(chestMesh);
+  const chestScaleX = isHoodie ? 1.25 : 1.14;
+  const chestScaleZ = isHoodie ? 0.94 : 0.80;
 
-  if (opts.topType === 'hoodie') {
-    const hoodGeo = new THREE.DodecahedronGeometry(0.22, 0);
-    const hoodMesh = new THREE.Mesh(hoodGeo, topMat);
-    hoodMesh.position.set(0, 0.30, -0.16);
-    hoodMesh.scale.set(1.2, 0.8, 0.7);
-    hoodMesh.castShadow = true;
-    chestGroup.add(hoodMesh);
+  // Tórax inferior atlético
+  const lowerRibGeo = new THREE.CylinderGeometry(0.168, 0.134, 0.14, 12);
+  const lowerRib = new THREE.Mesh(lowerRibGeo, topMat);
+  lowerRib.position.y = 0.055;
+  lowerRib.scale.set(chestScaleX, 1.0, chestScaleZ);
+  lowerRib.castShadow = true;
+  chestGroup.add(lowerRib);
+
+  // Busto atlético femenino
+  const upperRibGeo = new THREE.CylinderGeometry(0.192, 0.166, 0.14, 12);
+  const upperRib = new THREE.Mesh(upperRibGeo, topMat);
+  upperRib.position.y = 0.165;
+  upperRib.scale.set(chestScaleX * 1.02, 1.0, chestScaleZ * 1.04);
+  upperRib.castShadow = true;
+  chestGroup.add(upperRib);
+
+  // Clavícula / hombrera integrada sólidamente
+  const shoulderBridgeGeo = new THREE.BoxGeometry(0.48, 0.06, 0.16);
+  const shoulderBridge = new THREE.Mesh(shoulderBridgeGeo, topMat);
+  shoulderBridge.position.set(0, 0.21, 0.0);
+  shoulderBridge.castShadow = true;
+  chestGroup.add(shoulderBridge);
+
+  if (isHoodie) {
+    const hoodCollarGeo = new THREE.TorusGeometry(0.18, 0.065, 6, 12, Math.PI * 1.6);
+    const hoodCollar = new THREE.Mesh(hoodCollarGeo, topMat);
+    hoodCollar.position.set(0, 0.23, -0.04);
+    hoodCollar.rotation.x = Math.PI / 1.7;
+    chestGroup.add(hoodCollar);
   } else {
-    const collarGeo = new THREE.TorusGeometry(0.12, 0.025, 6, 10);
-    const collarMesh = new THREE.Mesh(collarGeo, accentMat);
-    collarMesh.position.set(0, 0.32, 0.04);
-    collarMesh.rotation.x = Math.PI / 2.3;
-    chestGroup.add(collarMesh);
+    const collarGeo = new THREE.TorusGeometry(0.095, 0.016, 6, 10);
+    const collar = new THREE.Mesh(collarGeo, accentMat);
+    collar.position.set(0, 0.24, 0.02);
+    collar.rotation.x = Math.PI / 2.2;
+    chestGroup.add(collar);
   }
 
-  // Cuello
-  const neckGeo = new THREE.CylinderGeometry(0.08, 0.095, 0.14, 8);
-  const neckMesh = new THREE.Mesh(neckGeo, skinMat);
-  neckMesh.position.y = 0.37;
-  neckMesh.castShadow = true;
-  chestGroup.add(neckMesh);
+  // Cuello estilizado
+  const neckGeo = new THREE.CylinderGeometry(0.060, 0.070, 0.14, 8);
+  const neck = new THREE.Mesh(neckGeo, skinMat);
+  neck.position.y = 0.285;
+  neck.castShadow = true;
+  chestGroup.add(neck);
 
-  // -----------------------------------------------------------
-  // 4. CABEZA Y ROSTRO LUMINOSO (100% DESPEJADO, CERO POLÍGONOS NEGROS)
-  // -----------------------------------------------------------
-  // 4. CABEZA Y ROSTRO 100% ESCULPIDO EN 3D LOW-POLY
-  // CERO planos cuadrados, CERO texturas 2D planas.
-  // -----------------------------------------------------------
+  // ==========================================================================
+  // 4. CABEZA Y ROSTRO APROBADOS (NO TOCADOS)
+  // ==========================================================================
   const head = new THREE.Group();
-  head.position.y = 0.52;
+  head.position.y = 0.44;
   chestGroup.add(head);
   parts.head = head;
 
-  // Luz frontal de retrato suave y cálida
-  const faceLight = new THREE.PointLight('#FFF6EE', 0.65, 3.5);
-  faceLight.position.set(0, 0.16, 1.1);
-  head.add(faceLight);
+  // Base craneal
+  const skullGeo = new THREE.SphereGeometry(0.215, 12, 10);
+  const skull = new THREE.Mesh(skullGeo, skinMat);
+  skull.position.set(0, 0.07, 0.0);
+  skull.scale.set(1.0, 1.04, 0.96);
+  skull.castShadow = true;
+  head.add(skull);
 
-  // A. ESTRUCTURA CRANEAL FACETADA Y CONTINUA
-  // 1. Cráneo superior (esfera facetada suavemente aplanada)
-  const skullGeo = new THREE.SphereGeometry(0.23, 14, 10);
-  const skullMesh = new THREE.Mesh(skullGeo, skinMat);
-  skullMesh.position.set(0, 0.15, -0.01);
-  skullMesh.scale.set(1.0, 1.05, 0.95);
-  skullMesh.castShadow = true;
-  skullMesh.receiveShadow = false;
-  head.add(skullMesh);
+  // Mentón suavemente biselado
+  const chinGeo = new THREE.ConeGeometry(0.12, 0.08, 8);
+  const chin = new THREE.Mesh(chinGeo, skinMat);
+  chin.position.set(0, -0.07, 0.015);
+  chin.rotation.x = Math.PI;
+  chin.scale.set(1.0, 1.0, 0.88);
+  head.add(chin);
 
-  // 2. Mandíbula y mejillas contorneadas (cilindro cónico facetado)
-  const jawGeo = new THREE.CylinderGeometry(0.22, 0.15, 0.22, 12);
-  const jawMesh = new THREE.Mesh(jawGeo, skinMat);
-  jawMesh.position.set(0, 0.04, 0.015);
-  jawMesh.scale.set(0.98, 1.0, 0.90);
-  jawMesh.castShadow = true;
-  jawMesh.receiveShadow = false;
-  head.add(jawMesh);
-
-  // 3. Mentón suavemente redondeado
-  const chinGeo = new THREE.DodecahedronGeometry(0.08, 0);
-  const chinMesh = new THREE.Mesh(chinGeo, skinMat);
-  chinMesh.position.set(0, -0.055, 0.06);
-  chinMesh.scale.set(1.0, 0.75, 0.85);
-  chinMesh.castShadow = true;
-  head.add(chinMesh);
-
-  // 4. Orejas estilizadas
-  [-1, 1].forEach((side) => {
-    const earGeo = new THREE.BoxGeometry(0.035, 0.075, 0.05);
-    const earMesh = new THREE.Mesh(earGeo, skinMat);
-    earMesh.position.set(side * 0.21, 0.13, -0.01);
-    earMesh.rotation.y = side * 0.15;
-    earMesh.rotation.z = -side * 0.10;
-    head.add(earMesh);
-  });
-
-  // B. MATERIALES DEDICADOS PARA OJOS Y BOCA (ESTILO MINIMALISTA LIMPIO)
-  const scleraMat = new THREE.MeshStandardMaterial({
-    color: 0xFFFFFF,
-    roughness: 0.25,
-    metalness: 0.0,
-    emissive: 0xFFFFFF,
-    emissiveIntensity: 0.25, // Blanco radiante constante, sin sombras oscuras
-    flatShading: true,
-  });
-
-  const irisColorHex = opts.irisColor || '#2E1E1E';
-  const irisMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(irisColorHex),
-    roughness: 0.35,
-    metalness: 0.0,
-    flatShading: true,
-  });
-
-  const sparkleMat = new THREE.MeshBasicMaterial({
-    color: 0xFFFFFF,
-  });
-
-  const linerMat = new THREE.MeshStandardMaterial({
-    color: 0x241620,
-    roughness: 0.5,
-    metalness: 0.0,
-    flatShading: true,
-  });
-
-  const mouthMat = new THREE.MeshStandardMaterial({
-    color: 0xE05375, // Frambuesa coral radiante
-    roughness: 0.35,
-    metalness: 0.0,
-    emissive: 0x441020,
-    flatShading: true,
-  });
-
-  const teethMat = new THREE.MeshStandardMaterial({
-    color: 0xFFFFFF,
-    roughness: 0.2,
-    metalness: 0.0,
-    emissive: 0xFFFFFF,
-    emissiveIntensity: 0.30,
-    flatShading: true,
-  });
-
-  // C. OJOS 3D LIMPIOS (ESCLERA BLANCA + IRIS + DESTELLO ESPECULAR + LÍNEA SUPERIOR FINA)
-  // Solo ojos y boca: sin cejas, sin nariz, sin alas pesadas, sin rubor recargado
-  [-1, 1].forEach((side) => {
+  // A. OJOS: Almendrados/redondos todo negro con detalle blanco (Aprobados)
+  [-1, 1].forEach(side => {
     const eyeGroup = new THREE.Group();
-    eyeGroup.position.set(side * 0.088, 0.145, 0.192);
+    eyeGroup.position.set(side * 0.072, 0.065, 0.195);
     eyeGroup.rotation.y = side * 0.16;
     head.add(eyeGroup);
 
-    // 1. Esclera blanca elíptica
-    const scleraGeo = new THREE.CylinderGeometry(0.040, 0.040, 0.012, 14);
-    const scleraMesh = new THREE.Mesh(scleraGeo, scleraMat);
-    scleraMesh.rotation.x = Math.PI / 2;
-    scleraMesh.scale.set(1.15, 1.0, 1.30);
-    eyeGroup.add(scleraMesh);
+    const eyeGeo = new THREE.CylinderGeometry(0.028, 0.028, 0.008, 12);
+    const eyeMesh = new THREE.Mesh(eyeGeo, blackMat);
+    eyeMesh.rotation.x = Math.PI / 2;
+    eyeMesh.scale.set(1.0, 1.0, 1.15);
+    eyeGroup.add(eyeMesh);
 
-    // 2. Iris / Pupila limpia en tono espresso profundo
-    const irisGeo = new THREE.CylinderGeometry(0.027, 0.027, 0.014, 12);
-    const irisMesh = new THREE.Mesh(irisGeo, irisMat);
-    irisMesh.rotation.x = Math.PI / 2;
-    irisMesh.scale.set(1.0, 1.0, 1.15);
-    irisMesh.position.set(side * 0.002, -0.002, 0.005);
-    eyeGroup.add(irisMesh);
+    const gleamGeo = new THREE.SphereGeometry(0.008, 8, 8);
+    const gleamMesh = new THREE.Mesh(gleamGeo, whiteMat);
+    gleamMesh.position.set(-side * 0.007, 0.008, 0.006);
+    eyeGroup.add(gleamMesh);
 
-    // 3. Brillo especular blanco simple y expresivo
-    const sparkGeo = new THREE.SphereGeometry(0.0085, 8, 8);
-    const sparkMesh = new THREE.Mesh(sparkGeo, sparkleMat);
-    sparkMesh.position.set(-side * 0.009, 0.012, 0.014);
-    eyeGroup.add(sparkMesh);
-
-    // 4. Contorno superior sutil que enmarca el ojo
-    const linerGeo = new THREE.BoxGeometry(0.082, 0.012, 0.014);
-    const linerMesh = new THREE.Mesh(linerGeo, linerMat);
-    linerMesh.position.set(0, 0.038, 0.008);
-    linerMesh.rotation.z = -side * 0.08;
-    eyeGroup.add(linerMesh);
+    // B. CEJAS CUADRADAS (Aprobadas)
+    const browGeo = new THREE.BoxGeometry(0.046, 0.013, 0.010);
+    const browMesh = new THREE.Mesh(browGeo, blackMat);
+    browMesh.position.set(0, 0.048, 0.005);
+    browMesh.rotation.z = -side * 0.04;
+    eyeGroup.add(browMesh);
   });
 
-  // D. BOCA Y SONRISA ALEGRE EN 3D CON DIENTES (LIMPIA Y ELEGANTE)
+  // C. BOCA: UNA LÍNEA RECTA LIMPIA EN REPOSO (Aprobada)
+  const mouthMode = opts.mouthMode || 'line';
   const mouthGroup = new THREE.Group();
-  mouthGroup.position.set(0, 0.052, 0.208);
+  mouthGroup.position.set(0, -0.042, 0.205);
   head.add(mouthGroup);
+  parts.mouthGroup = mouthGroup;
 
-  // Arco sonriente hacia arriba en 3D
-  const smileGeo = new THREE.TorusGeometry(0.036, 0.009, 8, 16, Math.PI);
-  const smileMesh = new THREE.Mesh(smileGeo, mouthMat);
-  smileMesh.rotation.z = Math.PI; // Curva alegre hacia arriba
-  mouthGroup.add(smileMesh);
-
-  // Dientes blancos en el interior de la sonrisa
-  const teethGeo = new THREE.BoxGeometry(0.036, 0.009, 0.012);
-  const teethMesh = new THREE.Mesh(teethGeo, teethMat);
-  teethMesh.position.set(0, 0.006, -0.004);
-  mouthGroup.add(teethMesh);
-
-  // -----------------------------------------------------------
-  // 5. CABELLO ESCULPIDO (SOLO EN PARTE SUPERIOR, LATERALES Y POSTERIOR)
-  // Ningún polígono de cabello invade el área del rostro (Z > 0.12)
-  // -----------------------------------------------------------
-  const hairGroup = new THREE.Group();
-  head.add(hairGroup);
-  parts.hair = hairGroup;
-
-  // Casquete posterior y superior (situado detrás del rostro en Z = -0.06)
-  const hairCapGeo = new THREE.SphereGeometry(0.27, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.58);
-  const hairCapMesh = new THREE.Mesh(hairCapGeo, hairMat);
-  hairCapMesh.position.set(0, 0.18, -0.06);
-  hairCapMesh.scale.set(1.04, 1.04, 0.82); // No llega al frente del rostro
-  hairCapMesh.castShadow = true;
-  hairGroup.add(hairCapMesh);
-
-  // Peinado superior: dos mechones que nacen arriba y van hacia los lados
-  [-0.15, 0.15].forEach((xOff, idx) => {
-    const tuftGeo = new THREE.ConeGeometry(0.075, 0.20, 6);
-    const tuft = new THREE.Mesh(tuftGeo, hairMat);
-    tuft.position.set(xOff, 0.32, 0.08); // Arriba en la coronilla, no baja a la cara
-    tuft.rotation.z = idx === 0 ? 0.45 : -0.45;
-    tuft.rotation.x = -0.15;
-    tuft.castShadow = false;
-    hairGroup.add(tuft);
-  });
-
-  // Mechones laterales externos que enmarcan la cabeza a los costados
-  const sideLGeo = new THREE.ConeGeometry(0.08, 0.44, 6);
-  const sideLMesh = new THREE.Mesh(sideLGeo, hairMat);
-  sideLMesh.position.set(-0.25, 0.06, 0.02);
-  sideLMesh.rotation.z = 0.12;
-  sideLMesh.castShadow = true;
-  hairGroup.add(sideLMesh);
-
-  const sideRMesh = new THREE.Mesh(sideLGeo, hairMat);
-  sideRMesh.position.set(0.25, 0.06, 0.02);
-  sideRMesh.rotation.z = -0.12;
-  sideRMesh.castShadow = true;
-  hairGroup.add(sideRMesh);
-
-  // Estilo posterior
-  const hairStyle = opts.hairStyle || 'long_wavy';
-
-  if (hairStyle === 'ponytail' || hairStyle === 'high_ponytail') {
-    const tieGeo = new THREE.TorusGeometry(0.06, 0.025, 6, 8);
-    const tieMesh = new THREE.Mesh(tieGeo, accentMat);
-    tieMesh.position.set(0, 0.28, -0.25);
-    tieMesh.rotation.x = 0.8;
-    hairGroup.add(tieMesh);
-
-    const ponyGeo = new THREE.ConeGeometry(0.14, 0.55, 8);
-    const ponyMesh = new THREE.Mesh(ponyGeo, hairMat);
-    ponyMesh.position.set(0, 0.12, -0.36);
-    ponyMesh.rotation.x = -0.55;
-    ponyMesh.castShadow = true;
-    hairGroup.add(ponyMesh);
-    parts.ponytail = ponyMesh;
-  } else if (hairStyle === 'bob') {
-    const bobBackGeo = new THREE.CylinderGeometry(0.26, 0.22, 0.32, 10, 1, false, Math.PI * 0.6, Math.PI * 1.8);
-    const bobBack = new THREE.Mesh(bobBackGeo, hairMat);
-    bobBack.position.set(0, 0.06, -0.08);
-    bobBack.castShadow = true;
-    hairGroup.add(bobBack);
+  if (mouthMode === 'circle') {
+    const mouthCircle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.022, 0.022, 0.008, 14),
+      blackMat
+    );
+    mouthCircle.rotation.x = Math.PI / 2;
+    mouthGroup.add(mouthCircle);
   } else {
-    // Long Wavy
-    const wavesGroup = new THREE.Group();
-    wavesGroup.position.set(0, 0.05, -0.14);
-    hairGroup.add(wavesGroup);
-    parts.hairWaves = wavesGroup;
-
-    for (let w = 0; w < 5; w++) {
-      const xOff = (w - 2) * 0.09;
-      const waveGeo = new THREE.ConeGeometry(0.08, 0.62, 6);
-      const waveMesh = new THREE.Mesh(waveGeo, hairMat);
-      waveMesh.position.set(xOff, -0.16, -Math.abs(xOff) * 0.2);
-      waveMesh.rotation.x = -0.22;
-      waveMesh.rotation.z = xOff * 0.4;
-      waveMesh.castShadow = true;
-      wavesGroup.add(waveMesh);
-    }
+    const mouthLine = new THREE.Mesh(
+      new THREE.BoxGeometry(0.042, 0.008, 0.008),
+      blackMat
+    );
+    mouthGroup.add(mouthLine);
   }
 
-  // -----------------------------------------------------------
-  // 6. BRAZOS Y MANOS ARTICULADAS
-  // -----------------------------------------------------------
-  const sleeveMat = (opts.sleeves === 'long') ? topMat : skinMat;
+  // ==========================================================================
+  // 5. CABELLO VOLUMÉTRICO 3D (CERO HOJAS PLANAS, FRENTE Y OJOS 100% DESPEJADOS)
+  // ==========================================================================
+  const rawStyle = opts.hairStyle || 'ref_chunky_bob';
+  let resolvedStyle = rawStyle;
+  if (rawStyle === 'long_wavy') resolvedStyle = 'ref_long_curtain';
+  if (rawStyle === 'high_ponytail') resolvedStyle = 'high_ponytail_slick';
+  if (rawStyle === 'bob') resolvedStyle = 'ref_chunky_bob';
+  if (rawStyle === 'curtain_waves') resolvedStyle = 'ref_chunky_bob';
+  if (rawStyle === 'top_bun') resolvedStyle = 'space_buns';
+
+  const hairGroup = buildHairstyle(head, resolvedStyle, hairMat, accentMat);
+  parts.hair = hairGroup;
+
+  // ==========================================================================
+  // 6. BRAZOS Y MANOS ARTICULADAS (APROBADOS SIN CAMBIOS)
+  // ==========================================================================
+  const isLongSleeves = (opts.sleeves === 'long');
+  const sleeveMat = isLongSleeves ? topMat : skinMat;
 
   // Brazo Izquierdo
   const shoulderL = new THREE.Group();
-  shoulderL.position.set(-0.31, 0.26, 0);
+  shoulderL.position.set(-0.25, 0.22, 0.0);
   chestGroup.add(shoulderL);
   parts.shoulderL = shoulderL;
 
-  const shoulderJointL = new THREE.Mesh(new THREE.SphereGeometry(0.072, 8, 8), topMat);
-  shoulderL.add(shoulderJointL);
-
-  const upperArmLGeo = new THREE.CylinderGeometry(0.068, 0.058, 0.26, 8);
+  const upperArmLGeo = new THREE.CylinderGeometry(0.052, 0.044, 0.26, 8);
   const upperArmL = new THREE.Mesh(upperArmLGeo, sleeveMat);
   upperArmL.position.y = -0.13;
   upperArmL.castShadow = true;
@@ -397,10 +287,7 @@ export function buildEnhancedCharacter(opts = {}) {
   shoulderL.add(elbowL);
   parts.elbowL = elbowL;
 
-  const elbowJointL = new THREE.Mesh(new THREE.SphereGeometry(0.058, 8, 8), skinMat);
-  elbowL.add(elbowJointL);
-
-  const forearmLGeo = new THREE.CylinderGeometry(0.058, 0.048, 0.24, 8);
+  const forearmLGeo = new THREE.CylinderGeometry(0.044, 0.038, 0.24, 8);
   const forearmL = new THREE.Mesh(forearmLGeo, skinMat);
   forearmL.position.y = -0.12;
   forearmL.castShadow = true;
@@ -411,24 +298,21 @@ export function buildEnhancedCharacter(opts = {}) {
   elbowL.add(handLGroup);
   parts.handL = handLGroup;
 
-  const palmL = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.038, 0.10, 8), skinMat);
-  palmL.position.y = -0.04;
+  const palmL = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.075, 0.026), skinMat);
+  palmL.position.y = -0.035;
   palmL.castShadow = true;
   handLGroup.add(palmL);
 
-  const thumbL = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.06, 5), skinMat);
-  thumbL.position.set(0.035, -0.02, 0.02);
-  thumbL.rotation.z = -0.45;
+  const thumbL = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.045, 5), skinMat);
+  thumbL.position.set(0.028, -0.02, 0.015);
+  thumbL.rotation.z = -0.35;
   handLGroup.add(thumbL);
 
   // Brazo Derecho
   const shoulderR = new THREE.Group();
-  shoulderR.position.set(0.31, 0.26, 0);
+  shoulderR.position.set(0.25, 0.22, 0.0);
   chestGroup.add(shoulderR);
   parts.shoulderR = shoulderR;
-
-  const shoulderJointR = new THREE.Mesh(new THREE.SphereGeometry(0.072, 8, 8), topMat);
-  shoulderR.add(shoulderJointR);
 
   const upperArmR = new THREE.Mesh(upperArmLGeo, sleeveMat);
   upperArmR.position.y = -0.13;
@@ -440,9 +324,6 @@ export function buildEnhancedCharacter(opts = {}) {
   shoulderR.add(elbowR);
   parts.elbowR = elbowR;
 
-  const elbowJointR = new THREE.Mesh(new THREE.SphereGeometry(0.058, 8, 8), skinMat);
-  elbowR.add(elbowJointR);
-
   const forearmR = new THREE.Mesh(forearmLGeo, skinMat);
   forearmR.position.y = -0.12;
   forearmR.castShadow = true;
@@ -453,121 +334,132 @@ export function buildEnhancedCharacter(opts = {}) {
   elbowR.add(handRGroup);
   parts.handR = handRGroup;
 
-  const palmR = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.038, 0.10, 8), skinMat);
-  palmR.position.y = -0.04;
+  const palmR = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.075, 0.026), skinMat);
+  palmR.position.y = -0.035;
   palmR.castShadow = true;
   handRGroup.add(palmR);
 
-  const thumbR = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.06, 5), skinMat);
-  thumbR.position.set(-0.035, -0.02, 0.02);
-  thumbR.rotation.z = 0.45;
+  const thumbR = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.045, 5), skinMat);
+  thumbR.position.set(-0.028, -0.02, 0.015);
+  thumbR.rotation.z = 0.35;
   handRGroup.add(thumbR);
 
-  if (opts.hasPhone) {
-    const phoneHolder = new THREE.Group();
-    phoneHolder.position.set(0, -0.06, 0.06);
-    phoneHolder.rotation.x = Math.PI / 4;
-    handRGroup.add(phoneHolder);
-
-    const miniPhoneMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(0.12, 0.22, 0.02),
-      createLowPolyMaterial('#1F2937', 0.4)
-    );
-    const miniScreenMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(0.105, 0.20, 0.005),
-      createLowPolyMaterial('#FCE7F0', 0.2)
-    );
-    miniScreenMesh.position.z = 0.011;
-    phoneHolder.add(miniPhoneMesh);
-    phoneHolder.add(miniScreenMesh);
-    parts.miniPhone = phoneHolder;
-  }
-
-  // -----------------------------------------------------------
-  // 7. PIERNAS Y CALZADO (100% APOYADOS EN EL PISO REAL Y = 0.00)
-  // -----------------------------------------------------------
-  const pantsLength = opts.pantsLength || 'shorts';
-  const thighMat = pantsLength === 'shorts' ? skinMat : bottomMat;
-  const calfMat = pantsLength === 'shorts' ? skinMat : bottomMat;
+  // ==========================================================================
+  // 7. PIERNAS REHECHAS CONTINUAS (APOYADAS EN EL SUELO Y = 0.00)
+  // ==========================================================================
+  const legMat = isJogger ? bottomMat : skinMat;
 
   // Pierna Izquierda
-  const legJointL = new THREE.Group();
-  legJointL.position.set(-0.14, -0.08, 0); // Y = 0.84 - 0.08 = 0.76
-  hips.add(legJointL);
-  parts.legL = legJointL;
+  const legL = new THREE.Group();
+  legL.position.set(-0.115, -0.04, 0.0);
+  hips.add(legL);
+  parts.legL = legL;
 
-  const thighLGeo = new THREE.CylinderGeometry(0.095, 0.075, 0.38, 8);
-  const thighL = new THREE.Mesh(thighLGeo, thighMat);
-  thighL.position.y = -0.19; // Centrado
+  // Muslo completo continuo
+  const thighGeo = new THREE.CylinderGeometry(0.088, 0.056, 0.38, 12);
+  const thighL = new THREE.Mesh(thighGeo, legMat);
+  thighL.position.y = -0.19;
+  thighL.scale.set(1.05, 1.0, 1.10);
   thighL.castShadow = true;
-  legJointL.add(thighL);
+  legL.add(thighL);
 
+  if (!isJogger) {
+    const shortsLegGeo = new THREE.CylinderGeometry(0.094, 0.084, 0.12, 12);
+    const shortsLegL = new THREE.Mesh(shortsLegGeo, bottomMat);
+    shortsLegL.position.y = -0.06;
+    shortsLegL.scale.set(1.05, 1.0, 1.10);
+    shortsLegL.castShadow = true;
+    legL.add(shortsLegL);
+  }
+
+  // Rodilla
   const kneeL = new THREE.Group();
-  kneeL.position.y = -0.38; // Y = 0.76 - 0.38 = 0.38
-  legJointL.add(kneeL);
+  kneeL.position.y = -0.38;
+  legL.add(kneeL);
   parts.kneeL = kneeL;
 
-  const kneeJointMeshL = new THREE.Mesh(new THREE.SphereGeometry(0.072, 8, 8), skinMat);
-  kneeL.add(kneeJointMeshL);
+  const kneeJointL = new THREE.Mesh(new THREE.CylinderGeometry(0.056, 0.054, 0.065, 8), legMat);
+  kneeJointL.castShadow = true;
+  kneeL.add(kneeJointL);
 
-  const calfLGeo = new THREE.CylinderGeometry(0.072, 0.058, 0.38, 8);
-  const calfL = new THREE.Mesh(calfLGeo, calfMat);
-  calfL.position.y = -0.19; // Centrado
-  calfL.castShadow = true;
-  kneeL.add(calfL);
+  const patellaL = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.054, 0.020), legMat);
+  patellaL.position.set(0, 0.005, 0.046);
+  kneeL.add(patellaL);
 
-  const footL = new THREE.Group();
-  footL.position.set(0, -0.38, 0); // Y = 0.38 - 0.38 = 0.00 EXACTO EN EL PISO
-  kneeL.add(footL);
-  parts.footL = footL;
+  // Pantorrilla
+  const shinGeo = new THREE.CylinderGeometry(0.062, 0.042, 0.35, 12);
+  const shinL = new THREE.Mesh(shinGeo, legMat);
+  shinL.position.y = -0.175;
+  shinL.scale.set(1.04, 1.0, 1.14);
+  shinL.castShadow = true;
+  kneeL.add(shinL);
 
-  buildShoe(footL, opts.shoeType || 'sneaker', shoesMat, soleMat, accentMat);
+  if (isJogger) {
+    const cuffGeo = new THREE.CylinderGeometry(0.050, 0.046, 0.05, 10);
+    const cuffL = new THREE.Mesh(cuffGeo, accentMat);
+    cuffL.position.y = -0.33;
+    kneeL.add(cuffL);
+  }
+
+  buildChunkyShoe(kneeL, opts.shoesType, shoesMat, soleMat, accentMat);
 
   // Pierna Derecha
-  const legJointR = new THREE.Group();
-  legJointR.position.set(0.14, -0.08, 0);
-  hips.add(legJointR);
-  parts.legR = legJointR;
+  const legR = new THREE.Group();
+  legR.position.set(0.115, -0.04, 0.0);
+  hips.add(legR);
+  parts.legR = legR;
 
-  const thighR = new THREE.Mesh(thighLGeo, thighMat);
+  const thighR = new THREE.Mesh(thighGeo, legMat);
   thighR.position.y = -0.19;
+  thighR.scale.set(1.05, 1.0, 1.10);
   thighR.castShadow = true;
-  legJointR.add(thighR);
+  legR.add(thighR);
+
+  if (!isJogger) {
+    const shortsLegGeo = new THREE.CylinderGeometry(0.094, 0.084, 0.12, 12);
+    const shortsLegR = new THREE.Mesh(shortsLegGeo, bottomMat);
+    shortsLegR.position.y = -0.06;
+    shortsLegR.scale.set(1.05, 1.0, 1.10);
+    shortsLegR.castShadow = true;
+    legR.add(shortsLegR);
+  }
 
   const kneeR = new THREE.Group();
   kneeR.position.y = -0.38;
-  legJointR.add(kneeR);
+  legR.add(kneeR);
   parts.kneeR = kneeR;
 
-  const kneeJointMeshR = new THREE.Mesh(new THREE.SphereGeometry(0.072, 8, 8), skinMat);
-  kneeR.add(kneeJointMeshR);
+  const kneeJointR = new THREE.Mesh(new THREE.CylinderGeometry(0.056, 0.054, 0.065, 8), legMat);
+  kneeJointR.castShadow = true;
+  kneeR.add(kneeJointR);
 
-  const calfR = new THREE.Mesh(calfLGeo, calfMat);
-  calfR.position.y = -0.19;
-  calfR.castShadow = true;
-  kneeR.add(calfR);
+  const patellaR = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.054, 0.020), legMat);
+  patellaR.position.set(0, 0.005, 0.046);
+  kneeR.add(patellaR);
 
-  const footR = new THREE.Group();
-  footR.position.set(0, -0.38, 0); // Y = 0.00 EXACTO EN EL PISO
-  kneeR.add(footR);
-  parts.footR = footR;
+  const shinR = new THREE.Mesh(shinGeo, legMat);
+  shinR.position.y = -0.175;
+  shinR.scale.set(1.04, 1.0, 1.14);
+  shinR.castShadow = true;
+  kneeR.add(shinR);
 
-  buildShoe(footR, opts.shoeType || 'sneaker', shoesMat, soleMat, accentMat);
+  if (isJogger) {
+    const cuffGeo = new THREE.CylinderGeometry(0.050, 0.046, 0.05, 10);
+    const cuffR = new THREE.Mesh(cuffGeo, accentMat);
+    cuffR.position.y = -0.33;
+    kneeR.add(cuffR);
+  }
 
-  // -----------------------------------------------------------
-  // 8. MOTOR DE ANIMACIÓN Y POSES
-  // -----------------------------------------------------------
+  buildChunkyShoe(kneeR, opts.shoesType, shoesMat, soleMat, accentMat);
+
+  // Control articular de poses
   function setPose(pose = {}) {
-    if (pose.rootY !== undefined) root.position.y = pose.rootY;
-    if (pose.rootRotY !== undefined) root.rotation.y = pose.rootRotY;
-
-    if (pose.hipsY !== undefined) hips.position.y = 0.84 + pose.hipsY;
+    if (pose.hipsY !== undefined) hips.position.y = 0.78 + pose.hipsY;
     if (pose.hipSway !== undefined) hips.rotation.z = pose.hipSway;
     if (pose.hipTwist !== undefined) hips.rotation.y = pose.hipTwist;
 
-    if (pose.torsoTilt !== undefined) torso.rotation.x = pose.torsoTilt;
-    if (pose.torsoTwist !== undefined) torso.rotation.y = pose.torsoTwist;
     if (pose.torsoSway !== undefined) torso.rotation.z = pose.torsoSway;
+    if (pose.torsoTilt !== undefined) torso.rotation.x = pose.torsoTilt;
 
     if (pose.headTilt !== undefined) head.rotation.x = pose.headTilt;
     if (pose.headTurn !== undefined) head.rotation.y = pose.headTurn;
@@ -583,12 +475,12 @@ export function buildEnhancedCharacter(opts = {}) {
     if (pose.armRZ !== undefined) shoulderR.rotation.z = pose.armRZ;
     if (pose.elbowRX !== undefined) elbowR.rotation.x = pose.elbowRX;
 
-    if (pose.legLX !== undefined) legJointL.rotation.x = pose.legLX;
-    if (pose.legLZ !== undefined) legJointL.rotation.z = pose.legLZ;
+    if (pose.legLX !== undefined) legL.rotation.x = pose.legLX;
+    if (pose.legLZ !== undefined) legL.rotation.z = pose.legLZ;
     if (pose.kneeLX !== undefined) kneeL.rotation.x = pose.kneeLX;
 
-    if (pose.legRX !== undefined) legJointR.rotation.x = pose.legRX;
-    if (pose.legRZ !== undefined) legJointR.rotation.z = pose.legRZ;
+    if (pose.legRX !== undefined) legR.rotation.x = pose.legRX;
+    if (pose.legRZ !== undefined) legR.rotation.z = pose.legRZ;
     if (pose.kneeRX !== undefined) kneeR.rotation.x = pose.kneeRX;
   }
 
@@ -655,7 +547,6 @@ export function buildEnhancedCharacter(opts = {}) {
         torsoSway: -hipSway * 0.6,
         headTilt: -Math.sin(cycle) * 0.04,
         headTurn: Math.sin(cycle * 0.5) * 0.16,
-        headRoll: -hipSway * 0.35,
 
         armLX: -0.4 + Math.cos(cycle * 0.5) * 0.50,
         armLZ: -0.4 - Math.sin(cycle * 0.5) * 0.30,
@@ -670,13 +561,6 @@ export function buildEnhancedCharacter(opts = {}) {
         legRX: -Math.sin(cycle * 0.5) * 0.22,
         kneeRX: Math.max(0, Math.sin(cycle * 0.5) * 0.35),
       });
-
-      if (parts.hairWaves) {
-        parts.hairWaves.rotation.z = -hipSway * 0.5;
-      }
-      if (parts.ponytail) {
-        parts.ponytail.rotation.z = -hipSway * 0.7;
-      }
     }
   }
 
@@ -685,57 +569,64 @@ export function buildEnhancedCharacter(opts = {}) {
     parts,
     materials: { skinMat, hairMat, topMat, bottomMat, shoesMat },
     setPose,
-    updateDance,
+    updateDance
   };
 }
 
 /**
- * Genera el calzado facetado (Sneaker o Taco) con suela descansando en Y = 0.00
+ * Zapatillas Chunky Low-Poly con plataforma biselada asentadas en Y = 0.00
  */
-function buildShoe(parent, type, shoeMat, soleMat, accentMat) {
+function buildChunkyShoe(parent, type, shoeMat, soleMat, accentMat) {
+  const shoeGroup = new THREE.Group();
+  shoeGroup.position.y = -0.35;
+  parent.add(shoeGroup);
+
   if (type === 'heels') {
-    const soleGeo = new THREE.BoxGeometry(0.12, 0.02, 0.24);
-    const soleMesh = new THREE.Mesh(soleGeo, soleMat);
-    soleMesh.position.set(0, 0.01, 0.04);
-    parent.add(soleMesh);
+    const sole = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.02, 0.20), soleMat);
+    sole.position.set(0, 0.01, 0.03);
+    shoeGroup.add(sole);
 
-    const heelPegGeo = new THREE.CylinderGeometry(0.016, 0.010, 0.10, 6);
-    const heelPeg = new THREE.Mesh(heelPegGeo, accentMat);
-    heelPeg.position.set(0, 0.05, -0.05);
-    parent.add(heelPeg);
+    const heelPeg = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.008, 0.09, 6), accentMat);
+    heelPeg.position.set(0, 0.045, -0.04);
+    shoeGroup.add(heelPeg);
 
-    const strapGeo = new THREE.TorusGeometry(0.06, 0.016, 5, 8);
-    const strap = new THREE.Mesh(strapGeo, shoeMat);
-    strap.position.set(0, 0.07, 0.04);
+    const strap = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 4, 8), shoeMat);
+    strap.position.set(0, 0.06, 0.03);
     strap.rotation.x = Math.PI / 2.3;
-    parent.add(strap);
+    shoeGroup.add(strap);
   } else {
-    // Sneaker Chunky con suela blanca que asienta en Y = 0.00
-    // Suela: altura 0.04, base en Y = 0.00, centro en Y = 0.02
-    const soleGeo = new THREE.BoxGeometry(0.14, 0.04, 0.28);
-    const soleMesh = new THREE.Mesh(soleGeo, soleMat);
-    soleMesh.position.set(0, 0.02, 0.05);
-    soleMesh.castShadow = true;
-    parent.add(soleMesh);
+    // 1. Suela Chunky con plataforma biselada
+    const soleGeo = new THREE.BoxGeometry(0.13, 0.04, 0.27);
+    const sole = new THREE.Mesh(soleGeo, soleMat);
+    sole.position.set(0, 0.02, 0.035);
+    sole.castShadow = true;
+    shoeGroup.add(sole);
 
-    // Empeine
-    const upperGeo = new THREE.BoxGeometry(0.13, 0.07, 0.24);
-    const upperMesh = new THREE.Mesh(upperGeo, shoeMat);
-    upperMesh.position.set(0, 0.065, 0.03);
-    upperMesh.castShadow = true;
-    parent.add(upperMesh);
+    // 2. Línea de amortiguación / entresuela
+    const midStripeGeo = new THREE.BoxGeometry(0.134, 0.014, 0.25);
+    const midStripe = new THREE.Mesh(midStripeGeo, accentMat);
+    midStripe.position.set(0, 0.04, 0.03);
+    shoeGroup.add(midStripe);
 
-    // Puntera biselada
-    const toeGeo = new THREE.CylinderGeometry(0.065, 0.065, 0.06, 8);
-    const toeMesh = new THREE.Mesh(toeGeo, shoeMat);
-    toeMesh.position.set(0, 0.06, 0.14);
-    toeMesh.scale.set(0.95, 1.0, 0.6);
-    parent.add(toeMesh);
+    // 3. Capellada / Upper del sneaker
+    const upperGeo = new THREE.BoxGeometry(0.118, 0.064, 0.22);
+    const upper = new THREE.Mesh(upperGeo, shoeMat);
+    upper.position.set(0, 0.07, 0.02);
+    upper.castShadow = true;
+    shoeGroup.add(upper);
 
-    // Franja de acento
-    const stripeGeo = new THREE.BoxGeometry(0.135, 0.018, 0.08);
-    const stripeMesh = new THREE.Mesh(stripeGeo, accentMat);
-    stripeMesh.position.set(0, 0.095, 0.04);
-    parent.add(stripeMesh);
+    // 4. Puntera redondeada facetada
+    const toeGeo = new THREE.CylinderGeometry(0.058, 0.058, 0.058, 8);
+    const toe = new THREE.Mesh(toeGeo, shoeMat);
+    toe.position.set(0, 0.062, 0.125);
+    toe.scale.set(0.96, 1.0, 0.70);
+    shoeGroup.add(toe);
+
+    // 5. Lengüeta acolchada
+    const tongueGeo = new THREE.BoxGeometry(0.08, 0.04, 0.05);
+    const tongue = new THREE.Mesh(tongueGeo, accentMat);
+    tongue.position.set(0, 0.098, 0.06);
+    tongue.rotation.x = -0.25;
+    shoeGroup.add(tongue);
   }
 }
