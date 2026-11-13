@@ -1,0 +1,50 @@
+{
+  "total_dur": 30.98,
+  "acts": [
+    {
+      "act": 1,
+      "id": "act1_hook_mayorista",
+      "start": 0.0,
+      "end": 6.059,
+      "vo_start": 0.22,
+      "vo_end": 5.806,
+      "vo_dur": 5.586
+    },
+    {
+      "act": 2,
+      "id": "act2_dolor_mayorista",
+      "start": 6.059,
+      "end": 12.993,
+      "vo_start": 6.266,
+      "vo_end": 12.74,
+      "vo_dur": 6.474
+    },
+    {
+      "act": 3,
+      "id": "act3_solucion_mayorista",
+      "start": 12.993,
+      "end": 19.629,
+      "vo_start": 13.2,
+      "vo_end": 19.376,
+      "vo_dur": 6.176
+    },
+    {
+      "act": 4,
+      "id": "act4_impacto_mayorista",
+      "start": 19.629,
+      "end": 25.182,
+      "vo_start": 19.836,
+      "vo_end": 24.929,
+      "vo_dur": 5.093
+    },
+    {
+      "act": 5,
+      "id": "act5_cta_mayorista",
+      "start": 25.182,
+      "end": 30.98,
+      "vo_start": 25.389,
+      "vo_end": 29.627,
+      "vo_dur": 4.238
+    }
+  ]
+}

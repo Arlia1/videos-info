@@ -1,0 +1,50 @@
+{
+  "total_dur": 28.3,
+  "acts": [
+    {
+      "act": 1,
+      "id": "act1_hook_farmacia",
+      "start": 0.0,
+      "end": 4.787,
+      "vo_start": 0.22,
+      "vo_end": 4.534,
+      "vo_dur": 4.314
+    },
+    {
+      "act": 2,
+      "id": "act2_dolor_farmacia",
+      "start": 4.787,
+      "end": 10.981,
+      "vo_start": 4.994,
+      "vo_end": 10.728,
+      "vo_dur": 5.734
+    },
+    {
+      "act": 3,
+      "id": "act3_solucion_farmacia",
+      "start": 10.981,
+      "end": 17.095,
+      "vo_start": 11.188,
+      "vo_end": 16.842,
+      "vo_dur": 5.654
+    },
+    {
+      "act": 4,
+      "id": "act4_impacto_farmacia",
+      "start": 17.095,
+      "end": 22.364,
+      "vo_start": 17.302,
+      "vo_end": 22.111,
+      "vo_dur": 4.809
+    },
+    {
+      "act": 5,
+      "id": "act5_cta_farmacia",
+      "start": 22.364,
+      "end": 28.3,
+      "vo_start": 22.571,
+      "vo_end": 26.945,
+      "vo_dur": 4.374
+    }
+  ]
+}

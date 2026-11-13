@@ -1,0 +1,50 @@
+{
+  "total_dur": 29.5,
+  "acts": [
+    {
+      "act": 1,
+      "id": "act1_hook_indumentaria",
+      "start": 0.0,
+      "end": 5.721,
+      "vo_start": 0.22,
+      "vo_end": 5.468,
+      "vo_dur": 5.248
+    },
+    {
+      "act": 2,
+      "id": "act2_dolor_indumentaria",
+      "start": 5.721,
+      "end": 12.23,
+      "vo_start": 5.928,
+      "vo_end": 11.977,
+      "vo_dur": 6.049
+    },
+    {
+      "act": 3,
+      "id": "act3_solucion_indumentaria",
+      "start": 12.23,
+      "end": 18.839,
+      "vo_start": 12.437,
+      "vo_end": 18.586,
+      "vo_dur": 6.149
+    },
+    {
+      "act": 4,
+      "id": "act4_impacto_indumentaria",
+      "start": 18.839,
+      "end": 23.571,
+      "vo_start": 19.046,
+      "vo_end": 23.318,
+      "vo_dur": 4.272
+    },
+    {
+      "act": 5,
+      "id": "act5_cta_indumentaria",
+      "start": 23.571,
+      "end": 29.5,
+      "vo_start": 23.778,
+      "vo_end": 28.146,
+      "vo_dur": 4.368
+    }
+  ]
+}

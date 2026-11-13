@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agencia Arlia — Pet Shops & Veterinarias: Pedidos 0% Comisión (1080x1920)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #030509;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Plus Jakarta Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #viewport-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: #050811;
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    #canvas {
+      display: block;
+      width: 1080px;
+      height: 1920px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="viewport-container">
+    <div id="stage">
+      <canvas id="canvas" width="1080" height="1920"></canvas>
+    </div>
+  </div>
+
+  <audio id="audio" src="audio/mix.wav" preload="auto"></audio>
+
+  <script src="main.js"></script>
+</body>
+</html>

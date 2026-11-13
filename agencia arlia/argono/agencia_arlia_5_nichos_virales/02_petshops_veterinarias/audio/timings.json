@@ -1,0 +1,50 @@
+{
+  "total_dur": 28.34,
+  "acts": [
+    {
+      "act": 1,
+      "id": "act1_hook_petshop",
+      "start": 0.0,
+      "end": 5.487,
+      "vo_start": 0.22,
+      "vo_end": 5.234,
+      "vo_dur": 5.014
+    },
+    {
+      "act": 2,
+      "id": "act2_dolor_petshop",
+      "start": 5.487,
+      "end": 11.216,
+      "vo_start": 5.694,
+      "vo_end": 10.963,
+      "vo_dur": 5.269
+    },
+    {
+      "act": 3,
+      "id": "act3_solucion_petshop",
+      "start": 11.216,
+      "end": 17.421,
+      "vo_start": 11.423,
+      "vo_end": 17.168,
+      "vo_dur": 5.745
+    },
+    {
+      "act": 4,
+      "id": "act4_impacto_petshop",
+      "start": 17.421,
+      "end": 22.524,
+      "vo_start": 17.628,
+      "vo_end": 22.271,
+      "vo_dur": 4.643
+    },
+    {
+      "act": 5,
+      "id": "act5_cta_petshop",
+      "start": 22.524,
+      "end": 28.34,
+      "vo_start": 22.731,
+      "vo_end": 26.989,
+      "vo_dur": 4.258
+    }
+  ]
+}
