@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agencia Arlia — Video Publicitario Oficial (1080x1920)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #030509;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Plus Jakarta Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #viewport-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.15);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #050811;
+      transform-origin: center center;
+    }
+
+    #canvas {
+      display: block;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* Floating Studio HUD */
+    #hud {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 17, 30, 0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 12px 28px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      z-index: 1000;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn {
+      background: #2563EB;
+      color: #FFF;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #CBD5E1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); color: #FFF; }
+
+    #timeline {
+      width: 320px;
+      accent-color: #38BDF8;
+      cursor: pointer;
+    }
+
+    .time-badge {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #38BDF8;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .brand-tag {
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10B981;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="viewport-container">
+    <div id="stage">
+      <canvas id="canvas" width="1080" height="1920"></canvas>
+    </div>
+  </div>
+
+  <!-- Interactive Controls Bar -->
+  <div id="hud">
+    <div class="brand-tag">
+      <div class="brand-dot"></div>
+      <span>AGENCIA ARLIA</span>
+    </div>
+
+    <button id="playBtn" class="btn">▶ Play</button>
+    <button id="resetBtn" class="btn btn-secondary">↺ Reiniciar</button>
+    <button id="muteBtn" class="btn btn-secondary">🔊 Audio</button>
+
+    <input type="range" id="timeline" min="0" max="20" step="0.01" value="0" />
+    <span id="timeBadge" class="time-badge">00.00s / 20.00s</span>
+  </div>
+
+  <audio id="audio" src="audio/mix.wav" preload="auto"></audio>
+
+  <script src="main.js"></script>
+</body>
+</html>
