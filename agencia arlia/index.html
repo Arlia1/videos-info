@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agencia Arlia — Suite de Videos Publicitarios (1080x1920)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #020408;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Plus Jakarta Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #viewport-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 99, 235, 0.2);
+      border-radius: 32px;
+      overflow: hidden;
+      background: #050811;
+      transform-origin: center center;
+    }
+
+    #canvas {
+      display: block;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* Minimal floating selector bar (Top-right / discrete, not at bottom) */
+    #selector-bar {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: rgba(11, 17, 30, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 8px 16px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    select, button {
+      background: #1E293B;
+      color: #FFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+    }
+    button.primary {
+      background: #2563EB;
+      border-color: #38BDF8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="viewport-container">
+    <div id="stage">
+      <canvas id="canvas" width="1080" height="1920"></canvas>
+    </div>
+  </div>
+
+  <div id="selector-bar">
+    <select id="videoSelect">
+      <option value="video_1_gastronomia">1. Gastronomía & Bares</option>
+      <option value="video_2_estetica">2. Estéticas & Barberías</option>
+      <option value="video_3_inmobiliaria">3. Inmobiliarias</option>
+      <option value="video_4_rediseno_web">4. Rediseño Web</option>
+      <option value="video_5_corralon_ferreteria">5. Corralones & Ferreterías</option>
+      <option value="video_6_videos_virales">6. Videos Virales Meta Ad</option>
+    </select>
+    <button id="playBtn" class="primary">▶ Play</button>
+  </div>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script src="main.js"></script>
+  <script>
+    const select = document.getElementById('videoSelect');
+    const playBtn = document.getElementById('playBtn');
+    const audio = document.getElementById('audio');
+
+    const AUDIO_MAP = {
+      video_1_gastronomia: 'audio/mix_1_gastronomia.wav',
+      video_2_estetica: 'audio/mix_2_estetica.wav',
+      video_3_inmobiliaria: 'audio/mix_3_inmobiliaria.wav',
+      video_4_rediseno_web: 'audio/mix_4_rediseno_web.wav',
+      video_5_corralon_ferreteria: 'audio/mix_5_corralon_ferreteria.wav',
+      video_6_videos_virales: 'audio/mix_6_videos_virales.wav'
+    };
+
+    audio.src = AUDIO_MAP.video_1_gastronomia;
+
+    select.addEventListener('change', (e) => {
+      window.VIDEO_ID = e.target.value;
+      audio.src = AUDIO_MAP[e.target.value];
+      audio.currentTime = 0;
+      if (window.render) window.render(0);
+    });
+
+    let playing = false;
+    let t = 0;
+    let last = null;
+
+    function tick(now) {
+      if (!last) last = now;
+      const dt = (now - last) / 1000;
+      last = now;
+
+      if (playing) {
+        t += dt;
+        if (t >= window.DUR) {
+          t = 0;
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+        if (window.render) window.render(t);
+        requestAnimationFrame(tick);
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? '⏸ Pausa' : '▶ Play';
+      if (playing) {
+        last = null;
+        audio.currentTime = t;
+        audio.play().catch(() => {});
+        requestAnimationFrame(tick);
+      } else {
+        audio.pause();
+      }
+    });
+  </script>
+</body>
+</html>
